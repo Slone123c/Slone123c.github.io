@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="340" viewBox="0 0 900 340" role="img" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<title>64 位哈希：H1 与 H2 的划分，以及 directory 使用的高位</title><desc>H1 占高 57 位，H2 占低 7 位。directory 使用最高的若干位，是 H1 的一部分，与 H1 重叠。本例目录深度为 2，目录前缀 10 选择 directory[2]。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#555"/></marker></defs>
+<rect width="900" height="340" fill="#ffffff"/>
+<text x="24" y="34" font-size="21" fill="#222" text-anchor="start" font-weight="bold">一个哈希值，三种用途：目录前缀包含在 H1 中</text>
+<text x="24" y="62" font-size="15" fill="#222" text-anchor="start">以 64 位平台为例；示意宽度，不按位数比例</text>
+<rect x="24" y="88" width="650" height="70" rx="8" fill="#f4f9fd" stroke="#555"/>
+<rect x="674" y="88" width="202" height="70" rx="8" fill="#d5f5e3" stroke="#555"/>
+<rect x="24" y="88" width="210" height="70" rx="8" fill="#fdebd0" stroke="#555"/>
+<text x="129" y="118" font-size="17" fill="#222" text-anchor="middle" font-weight="bold">最高若干位</text>
+<text x="129" y="143" font-size="15" fill="#222" text-anchor="middle">本例：10（2 位）</text>
+<text x="454" y="118" font-size="17" fill="#222" text-anchor="middle" font-weight="bold">H1 的其余位</text>
+<text x="775" y="118" font-size="17" fill="#222" text-anchor="middle" font-weight="bold">H2：低 7 位</text>
+<text x="775" y="143" font-size="15" fill="#222" text-anchor="middle">本例：42</text>
+<path d="M24 167 V181 H674 V167" fill="none" stroke="#2874a6"/>
+<text x="349" y="205" font-size="16" fill="#2874a6" text-anchor="middle" font-weight="bold">H1 = hash &gt;&gt; 7（高 57 位，包含目录前缀）</text>
+<path d="M129 158 V242" fill="none" stroke="#555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M454 213 V242" fill="none" stroke="#555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M775 158 V242" fill="none" stroke="#555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="24" y="245" width="210" height="55" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="129.0" y="267" font-size="16" fill="#222" text-anchor="middle" font-weight="bold">directory[2]</text>
+<text x="129.0" y="289" font-size="14" fill="#222" text-anchor="middle">交出目标 table</text>
+<rect x="284" y="245" width="340" height="55" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="454.0" y="267" font-size="16" fill="#222" text-anchor="middle" font-weight="bold">H1 &amp; (group 数量 - 1)</text>
+<text x="454.0" y="289" font-size="14" fill="#222" text-anchor="middle">本例：起点 group 5</text>
+<rect x="674" y="245" width="202" height="55" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="775.0" y="267" font-size="16" fill="#222" text-anchor="middle" font-weight="bold">group 控制字匹配</text>
+<text x="775.0" y="289" font-size="14" fill="#222" text-anchor="middle">交出候选槽位集合</text>
+</svg>

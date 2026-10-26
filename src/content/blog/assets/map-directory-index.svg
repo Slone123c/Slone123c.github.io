@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="550" viewBox="0 0 900 550" role="img" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<title>目录前缀选 table</title>
+<desc>示意 hash 的最高 2 位为 10，目录深度为 2；hash 右移 62 位得到下标 2，读取 directory[2] 拿到目标 table。directory 共 4 项，还没拆分的 table A 同时被下标 0 和 1 引用。</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0L10 5L0 10Z" fill="#555"/>
+  </marker>
+  <marker id="arrow-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0L10 5L0 10Z" fill="#b9770e"/>
+  </marker>
+</defs>
+<rect width="900" height="550" fill="#ffffff"/>
+
+<!-- 标题 -->
+<text x="40" y="34" font-size="21" fill="#222" font-weight="bold">目录前缀 10 怎样选出 table</text>
+<text x="40" y="60" font-size="14" fill="#555">示意 hash · 目录深度 = 2 · 目录长度 = 1 &lt;&lt; 2 = 4</text>
+
+<!-- hash 位串 -->
+<text x="40" y="94" font-size="15" fill="#222" font-weight="bold">hash（64 位，最高位在左）</text>
+<g font-family="Menlo, Consolas, monospace" font-size="16" text-anchor="middle">
+  <rect x="40" y="104" width="30" height="38" fill="#fdebd0" stroke="#555"/><text x="55" y="129" fill="#222" font-weight="bold">1</text>
+  <rect x="70" y="104" width="30" height="38" fill="#fdebd0" stroke="#555"/><text x="85" y="129" fill="#222" font-weight="bold">0</text>
+  <rect x="100" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="115" y="129" fill="#555">1</text>
+  <rect x="130" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="145" y="129" fill="#555">1</text>
+  <rect x="160" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="175" y="129" fill="#555">0</text>
+  <rect x="190" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="205" y="129" fill="#555">1</text>
+  <rect x="220" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="235" y="129" fill="#555">1</text>
+  <rect x="250" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="265" y="129" fill="#555">0</text>
+  <rect x="280" y="104" width="70" height="38" fill="#f4f9fd" stroke="#555"/><text x="315" y="129" fill="#777">……</text>
+  <rect x="350" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="365" y="129" fill="#555">0</text>
+  <rect x="380" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="395" y="129" fill="#555">1</text>
+  <rect x="410" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="425" y="129" fill="#555">0</text>
+  <rect x="440" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="455" y="129" fill="#555">1</text>
+  <rect x="470" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="485" y="129" fill="#555">0</text>
+  <rect x="500" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="515" y="129" fill="#555">1</text>
+  <rect x="530" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="545" y="129" fill="#555">0</text>
+  <rect x="560" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="575" y="129" fill="#555">1</text>
+  <rect x="590" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="605" y="129" fill="#555">0</text>
+  <rect x="620" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="635" y="129" fill="#555">1</text>
+  <rect x="650" y="104" width="30" height="38" fill="#f4f9fd" stroke="#555"/><text x="665" y="129" fill="#555">0</text>
+</g>
+
+<!-- 最高 2 位标注 -->
+<path d="M40 150 V158 H100 V150" fill="none" stroke="#b9770e" stroke-width="1.6"/>
+<text x="40" y="182" font-size="15" fill="#b9770e" font-weight="bold">最高 2 位 = 二进制 10 = 2</text>
+<text x="40" y="204" font-size="14" fill="#555">hash &gt;&gt; (64 − 2)：右移 62 位，其余位全被移出</text>
+
+<!-- hash 到 directory[2] -->
+<path d="M70 214 V388 H258" fill="none" stroke="#b9770e" stroke-width="2" marker-end="url(#arrow-hl)"/>
+<text x="84" y="300" font-size="14" fill="#b9770e">作为下标</text>
+<text x="84" y="320" font-size="14" fill="#b9770e">读取 directory[2]</text>
+
+<!-- directory -->
+<text x="260" y="238" font-size="15" fill="#222" font-weight="bold">directory（table 引用数组）</text>
+<g font-size="15">
+  <rect x="260" y="248" width="180" height="56" fill="#f4f9fd" stroke="#555"/>
+  <text x="280" y="281" fill="#222">[0]</text><text x="420" y="281" fill="#777" text-anchor="end" font-family="Menlo, Consolas, monospace">00</text>
+  <rect x="260" y="304" width="180" height="56" fill="#f4f9fd" stroke="#555"/>
+  <text x="280" y="337" fill="#222">[1]</text><text x="420" y="337" fill="#777" text-anchor="end" font-family="Menlo, Consolas, monospace">01</text>
+  <rect x="260" y="360" width="180" height="56" fill="#fdebd0" stroke="#b9770e" stroke-width="2"/>
+  <text x="280" y="393" fill="#222" font-weight="bold">[2]</text><text x="420" y="393" fill="#b9770e" text-anchor="end" font-weight="bold" font-family="Menlo, Consolas, monospace">10</text>
+  <rect x="260" y="416" width="180" height="56" fill="#f4f9fd" stroke="#555"/>
+  <text x="280" y="449" fill="#222">[3]</text><text x="420" y="449" fill="#777" text-anchor="end" font-family="Menlo, Consolas, monospace">11</text>
+</g>
+
+<!-- directory 到 table -->
+<path d="M440 276 L598 298" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M440 332 L598 310" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M440 388 H598" fill="none" stroke="#b9770e" stroke-width="2" marker-end="url(#arrow-hl)"/>
+<path d="M440 444 H598" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+<!-- tables -->
+<text x="600" y="238" font-size="15" fill="#222" font-weight="bold">table</text>
+<rect x="600" y="256" width="270" height="96" rx="6" fill="#f7f7f7" stroke="#555" stroke-width="1.4"/>
+<text x="616" y="284" font-size="15" fill="#222" font-weight="bold">table A（localDepth = 1）</text>
+<text x="616" y="308" font-size="13.5" fill="#555">还没拆分，只看最高 1 位</text>
+<text x="616" y="330" font-size="13.5" fill="#555">00、01 两项都指向它</text>
+
+<rect x="600" y="362" width="270" height="52" rx="6" fill="#d6eaf8" stroke="#b9770e" stroke-width="2"/>
+<text x="616" y="384" font-size="15" fill="#222" font-weight="bold">table B（localDepth = 2）</text>
+<text x="616" y="404" font-size="13.5" fill="#1a5276">本例目标 table，有 8 个 group</text>
+
+<rect x="600" y="418" width="270" height="52" rx="6" fill="#f7f7f7" stroke="#555" stroke-width="1.4"/>
+<text x="616" y="440" font-size="15" fill="#222" font-weight="bold">table C（localDepth = 2）</text>
+<text x="616" y="460" font-size="13.5" fill="#555">最高 2 位为 11 的 key 来这里</text>
+
+<!-- 底部说明 -->
+<text x="40" y="512" font-size="14" fill="#777">目录项与 table 不是一一对应：没拆分过的 table 会被多个目录项共享，所以下标 2 不等于“第 2 张 table”。</text>
+</svg>

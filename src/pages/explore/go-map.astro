@@ -1,0 +1,11 @@
+---
+import Experience from '../../experiences/go-map/Experience';
+import { sitePath } from '../../lib/path';
+---
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="description" content="滚动进入 Go map：从 Kubernetes 集合，到 Swiss Table 内部的一次查找，再回到 client-go 的索引。" /><title>走进 Go map · Slone 的滚动叙事</title><link rel="icon" type="image/svg+xml" href={sitePath('favicon.svg')} /><script is:inline>
+  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+  const syncMotion = () => { document.documentElement.dataset.mapMotion = String(motion.matches); };
+  syncMotion();
+  motion.addEventListener('change', syncMotion);
+</script></head><body><Experience client:load /></body></html>

@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" width="900" height="440" font-family="PingFang SC, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#555"/></marker>
+  </defs>
+  <rect width="900" height="440" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="20" y="28" font-size="16" font-weight="bold" fill="#222">client-go Indexer 的数据结构：三层 map 索引与主存储</text>
+  <text x="20" y="50" font-size="13" fill="#555">Indices（索引名 → Index） → Index（索引值 → 对象 key 集合） → sets.String → items（主存储）</text>
+
+  <!-- ==================== TOP: 4 Columns Data Structures ==================== -->
+
+  <!-- Column 1: Indices -->
+  <g stroke="#555" font-size="13" text-anchor="middle">
+    <!-- Header -->
+    <rect x="20" y="70" width="180" height="28" fill="#e5e7eb"/><text x="110" y="89" stroke="none" fill="#222" font-weight="bold">Indices · map[string]Index</text>
+    <!-- Sub-headers -->
+    <rect x="20" y="98" width="95" height="24" fill="#f7f7f7"/><text x="67" y="114" stroke="none" fill="#666" font-size="11">key（索引名）</text>
+    <rect x="115" y="98" width="85" height="24" fill="#f7f7f7"/><text x="157" y="114" stroke="none" fill="#666" font-size="11">value（指针）</text>
+    <!-- Row 1: namespace -->
+    <rect x="20" y="122" width="95" height="40" fill="#d6eaf8"/><text x="67" y="147" stroke="none" fill="#222">"namespace"</text>
+    <rect x="115" y="122" width="85" height="40" fill="#ffffff"/><text x="157" y="147" stroke="none" fill="#2874a6">→ Index</text>
+    <!-- Row 2: nodeName -->
+    <rect x="20" y="162" width="95" height="36" fill="#ffffff"/><text x="67" y="185" stroke="none" fill="#555">"nodeName"</text>
+    <rect x="115" y="162" width="85" height="36" fill="#ffffff"/><text x="157" y="185" stroke="none" fill="#777">→ Index</text>
+    <!-- Row 3: others -->
+    <rect x="20" y="198" width="180" height="30" fill="#ffffff" stroke-dasharray="2 4"/><text x="110" y="217" stroke="none" fill="#777">…</text>
+  </g>
+  <path d="M 20 236 v 8 h 180 v -8" fill="none" stroke="#2874a6"/>
+  <text x="110" y="258" font-size="12" text-anchor="middle" fill="#2874a6">① 查索引名（1 次）</text>
+  <text x="110" y="275" font-size="11" text-anchor="middle" fill="#777">选出 "namespace" 对应 Index</text>
+
+  <!-- Column 2: Index -->
+  <g stroke="#555" font-size="13" text-anchor="middle">
+    <!-- Header -->
+    <rect x="240" y="70" width="200" height="28" fill="#e5e7eb"/><text x="340" y="89" stroke="none" fill="#222" font-weight="bold">Index · map[string]sets.String</text>
+    <!-- Sub-headers -->
+    <rect x="240" y="98" width="105" height="24" fill="#f7f7f7"/><text x="292" y="114" stroke="none" fill="#666" font-size="11">key（索引值）</text>
+    <rect x="345" y="98" width="95" height="24" fill="#f7f7f7"/><text x="392" y="114" stroke="none" fill="#666" font-size="11">value（指针）</text>
+    <!-- Row 1: default -->
+    <rect x="240" y="122" width="105" height="40" fill="#d6eaf8"/><text x="292" y="147" stroke="none" fill="#222">"default"</text>
+    <rect x="345" y="122" width="95" height="40" fill="#ffffff"/><text x="392" y="147" stroke="none" fill="#2874a6">→ sets.String</text>
+    <!-- Row 2: kube-system -->
+    <rect x="240" y="162" width="105" height="36" fill="#ffffff"/><text x="292" y="185" stroke="none" fill="#555">"kube-system"</text>
+    <rect x="345" y="162" width="95" height="36" fill="#ffffff"/><text x="392" y="185" stroke="none" fill="#777">→ sets.String</text>
+    <!-- Row 3: others -->
+    <rect x="240" y="198" width="200" height="30" fill="#ffffff" stroke-dasharray="2 4"/><text x="340" y="217" stroke="none" fill="#777">…</text>
+  </g>
+  <path d="M 240 236 v 8 h 200 v -8" fill="none" stroke="#2874a6"/>
+  <text x="340" y="258" font-size="12" text-anchor="middle" fill="#2874a6">② 查索引值（1 次）</text>
+  <text x="340" y="275" font-size="11" text-anchor="middle" fill="#777">选出 "default" 对应集合</text>
+
+  <!-- Column 3: sets.String -->
+  <g stroke="#555" font-size="13" text-anchor="middle">
+    <!-- Header -->
+    <rect x="480" y="70" width="180" height="28" fill="#e5e7eb"/><text x="570" y="89" stroke="none" fill="#222" font-weight="bold">sets.String（对象 key 集合）</text>
+    <!-- Sub-header -->
+    <rect x="480" y="98" width="180" height="24" fill="#f7f7f7"/><text x="570" y="114" stroke="none" fill="#666" font-size="11">底层 map[string]struct{}</text>
+    <!-- Elements: default group -->
+    <rect x="480" y="122" width="180" height="36" fill="#fdebd0"/><text x="570" y="145" stroke="none" fill="#222">"default/nginx-1"</text>
+    <rect x="480" y="158" width="180" height="36" fill="#fdebd0"/><text x="570" y="181" stroke="none" fill="#222">"default/nginx-2"</text>
+    <!-- Element: kube-system group -->
+    <rect x="480" y="198" width="180" height="30" fill="#ffffff"/><text x="570" y="218" stroke="none" fill="#555">"kube-system/coredns"</text>
+  </g>
+  <path d="M 480 236 v 8 h 180 v -8" fill="none" stroke="#2874a6"/>
+  <text x="570" y="258" font-size="12" text-anchor="middle" fill="#2874a6">③ 读 key 集合（O(1)/个）</text>
+  <text x="570" y="275" font-size="11" text-anchor="middle" fill="#777">产出待查主存储的 key 列表</text>
+
+  <!-- Column 4: items (Main Store) -->
+  <g stroke="#555" font-size="13" text-anchor="middle">
+    <!-- Header -->
+    <rect x="700" y="70" width="180" height="28" fill="#e5e7eb"/><text x="790" y="89" stroke="none" fill="#222" font-weight="bold">items · map[string]any</text>
+    <!-- Sub-header -->
+    <rect x="700" y="98" width="180" height="24" fill="#f7f7f7"/><text x="790" y="114" stroke="none" fill="#666" font-size="11">主存储：key → 真实对象指针</text>
+    <!-- Items -->
+    <rect x="700" y="122" width="180" height="36" fill="#d5f5e3"/><text x="790" y="145" stroke="none" fill="#222">Pod nginx-1</text>
+    <rect x="700" y="158" width="180" height="36" fill="#d5f5e3"/><text x="790" y="181" stroke="none" fill="#222">Pod nginx-2</text>
+    <rect x="700" y="198" width="180" height="30" fill="#ffffff"/><text x="790" y="218" stroke="none" fill="#555">Pod coredns</text>
+  </g>
+  <path d="M 700 236 v 8 h 180 v -8" fill="none" stroke="#2874a6"/>
+  <text x="790" y="258" font-size="12" text-anchor="middle" fill="#2874a6">④ 查主存储（N 次）</text>
+  <text x="790" y="275" font-size="11" text-anchor="middle" fill="#777">逐 key 查 items 取出实际 Pod</text>
+
+  <!-- Connecting Lines -->
+  <g stroke="#555" marker-end="url(#a)">
+    <!-- Col 1 -> Col 2 -->
+    <line x1="200" y1="142" x2="238" y2="142"/>
+    <!-- Col 2 -> Col 3 (default branches) -->
+    <line x1="440" y1="140" x2="478" y2="140"/>
+    <path d="M 440 142 C 455 142, 460 176, 478 176" fill="none"/>
+    <!-- Col 2 -> Col 3 (kube-system) -->
+    <path d="M 440 180 C 455 180, 460 213, 478 213" fill="none" stroke-dasharray="3 3"/>
+    <!-- Col 3 -> Col 4 -->
+    <line x1="660" y1="140" x2="698" y2="140"/>
+    <line x1="660" y1="176" x2="698" y2="176"/>
+    <line x1="660" y1="213" x2="698" y2="213" stroke-dasharray="3 3"/>
+  </g>
+
+  <!-- Divider Line -->
+  <line x1="20" y1="300" x2="880" y2="300" stroke="#ddd"/>
+
+  <!-- ==================== BOTTOM: Lookup Flow & Cost ==================== -->
+  <text x="20" y="324" font-size="14" font-weight="bold" fill="#222">查询链路与成本：indexer.ByIndex("namespace", "default")</text>
+
+  <g stroke="#555" font-size="13" text-anchor="middle">
+    <rect x="20"  y="338" width="180" height="48" fill="#f4f9fd"/>
+    <text x="110" y="358" stroke="none" fill="#222">Indices["namespace"]</text>
+    <text x="110" y="376" stroke="none" fill="#666" font-size="11">1 次查找 → 得 Index</text>
+
+    <rect x="240" y="338" width="200" height="48" fill="#f4f9fd"/>
+    <text x="340" y="358" stroke="none" fill="#222">Index["default"]</text>
+    <text x="340" y="376" stroke="none" fill="#666" font-size="11">1 次查找 → 得 sets.String</text>
+
+    <rect x="480" y="338" width="180" height="48" fill="#fdebd0"/>
+    <text x="570" y="358" stroke="none" fill="#222">遍历 2 个 key</text>
+    <text x="570" y="380" stroke="none" fill="#666" font-size="11">map[string]struct{} 遍历</text>
+
+    <rect x="700" y="338" width="180" height="48" fill="#d5f5e3"/>
+    <text x="790" y="358" stroke="none" fill="#222">items[key] × 2</text>
+    <text x="790" y="380" stroke="none" fill="#666" font-size="11">2 次查找 → 得实际 Pod</text>
+  </g>
+
+  <g stroke="#555" marker-end="url(#a)">
+    <line x1="200" y1="362" x2="238" y2="362"/>
+    <line x1="440" y1="362" x2="478" y2="362"/>
+    <line x1="660" y1="362" x2="698" y2="362"/>
+  </g>
+
+  <text x="20" y="416" font-size="12" fill="#777">数据检索为 2 + N 次 map 查找；ByIndex 另有 1 次注册检查。N = 100 时，合计 103 次 map 查找。</text>
+</svg>

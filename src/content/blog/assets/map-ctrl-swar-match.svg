@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650" role="img" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<title>同一次查询：group 5 筛选未命中，探测到 group 6 后命中</title><desc>查询 alice，H2 为 42。group 5 的控制字为 11、42、23、65、42、deleted、9、77；候选槽位 1 与 4 完整 key 均不等，且无 empty，因此继续到 group 6。在 group 6 筛出槽位 2，完整 key 等于 alice，返回该槽位的整数 100。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#555"/></marker></defs>
+<rect width="1000" height="650" fill="#ffffff"/>
+<text x="24" y="34" font-size="22" fill="#222" text-anchor="start" font-weight="bold">同一次查询：先筛选候选，再比较完整 key</text>
+<text x="24" y="63" font-size="16" fill="#222" text-anchor="start">查询 key = &quot;alice&quot;  ·  H2 = 42  ·  数字与位置均为人为构造的示意</text>
+<text x="24" y="107" font-size="19" fill="#222" text-anchor="start" font-weight="bold">group 5：控制字批量匹配 → 候选槽位 1、4</text>
+<text x="85" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 0</text>
+<rect x="30" y="149" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="85" y="181" font-size="17" fill="#222" text-anchor="middle">11</text>
+<text x="205" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 1</text>
+<rect x="150" y="149" width="110" height="52" rx="8" fill="#d5f5e3" stroke="#555"/>
+<text x="205" y="181" font-size="17" fill="#222" text-anchor="middle" font-weight="bold">42</text>
+<text x="325" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 2</text>
+<rect x="270" y="149" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="325" y="181" font-size="17" fill="#222" text-anchor="middle">23</text>
+<text x="445" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 3</text>
+<rect x="390" y="149" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="445" y="181" font-size="17" fill="#222" text-anchor="middle">65</text>
+<text x="565" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 4</text>
+<rect x="510" y="149" width="110" height="52" rx="8" fill="#d5f5e3" stroke="#555"/>
+<text x="565" y="181" font-size="17" fill="#222" text-anchor="middle" font-weight="bold">42</text>
+<text x="685" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 5</text>
+<rect x="630" y="149" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="685" y="181" font-size="17" fill="#222" text-anchor="middle">deleted</text>
+<text x="805" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 6</text>
+<rect x="750" y="149" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="805" y="181" font-size="17" fill="#222" text-anchor="middle">9</text>
+<text x="925" y="137" font-size="14" fill="#222" text-anchor="middle">槽位 7</text>
+<rect x="870" y="149" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="925" y="181" font-size="17" fill="#222" text-anchor="middle">77</text>
+<rect x="30" y="225" width="450" height="78" rx="8" fill="#d5f5e3" stroke="#555"/>
+<text x="50" y="253" font-size="17" fill="#222" text-anchor="start" font-weight="bold">候选 slot 1：key != &quot;alice&quot;</text>
+<text x="50" y="281" font-size="17" fill="#222" text-anchor="start" font-weight="bold">候选 slot 4：key != &quot;alice&quot;</text>
+<rect x="510" y="225" width="460" height="78" rx="8" fill="#fdebd0" stroke="#555"/>
+<text x="530" y="253" font-size="17" fill="#222" text-anchor="start" font-weight="bold">无命中，且 8 个槽位中没有 empty</text>
+<text x="530" y="281" font-size="16" fill="#222" text-anchor="start">槽位 5 是 deleted → 仍须继续探测</text>
+<path d="M480 264 H510" fill="none" stroke="#555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M740 303 V335 H500 V363" fill="none" stroke="#555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="24" y="352" font-size="18" fill="#555" text-anchor="start" font-weight="bold">table 探测序列给出下一组：5 → 6</text>
+<text x="24" y="388" font-size="19" fill="#222" text-anchor="start" font-weight="bold">group 6：用同一个 H2 = 42 再筛选</text>
+<text x="85" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 0</text>
+<rect x="30" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="85" y="462" font-size="17" fill="#222" text-anchor="middle">17</text>
+<text x="205" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 1</text>
+<rect x="150" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="205" y="462" font-size="17" fill="#222" text-anchor="middle">61</text>
+<text x="325" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 2</text>
+<rect x="270" y="430" width="110" height="52" rx="8" fill="#d5f5e3" stroke="#555"/>
+<text x="325" y="462" font-size="17" fill="#222" text-anchor="middle" font-weight="bold">42</text>
+<text x="445" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 3</text>
+<rect x="390" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="445" y="462" font-size="17" fill="#222" text-anchor="middle">empty</text>
+<text x="565" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 4</text>
+<rect x="510" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="565" y="462" font-size="17" fill="#222" text-anchor="middle">empty</text>
+<text x="685" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 5</text>
+<rect x="630" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="685" y="462" font-size="17" fill="#222" text-anchor="middle">8</text>
+<text x="805" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 6</text>
+<rect x="750" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="805" y="462" font-size="17" fill="#222" text-anchor="middle">empty</text>
+<text x="925" y="418" font-size="14" fill="#222" text-anchor="middle">槽位 7</text>
+<rect x="870" y="430" width="110" height="52" rx="8" fill="#f7f7f7" stroke="#555"/>
+<text x="925" y="462" font-size="17" fill="#222" text-anchor="middle">empty</text>
+<path d="M325 482 V520" fill="none" stroke="#555" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="30" y="520" width="940" height="68" rx="8" fill="#d5f5e3" stroke="#555"/>
+<text x="50" y="548" font-size="18" fill="#222" text-anchor="start" font-weight="bold">候选 slot 2：key == &quot;alice&quot; → 读取 value（整数 100）→ value = 100, ok = true</text>
+<text x="50" y="574" font-size="16" fill="#222" text-anchor="start">先完成候选 key 比较，再判断 empty；group 6 有空位也不影响这里命中。</text>
+<text x="24" y="615" font-size="15" fill="#222" text-anchor="start">批量匹配减少 key 访问；H2 只提供候选，最终结果由完整 key 比较决定。</text>
+</svg>

@@ -38,3 +38,7 @@ Astro 7 显式使用 @astrojs/markdown-remark 的 unified processor，schema 从
 新增 /explore/wave-story/，把原正弦波文章拆为点、振幅、频率、相位四步。支持手动章节切换、12 秒一章的自动讲解、动画播放/暂停、相位逐帧拖动与采样点。所有动画初始暂停，切后台自动暂停。原文顶部及文末提供入口。
 
 本地类型检查 0 错误/警告/提示，静态构建成功。1280px 与 390px Chromium 验证动画更新、暂停后静止、参数逐步解锁、键盘调节、四步自动推进与最终停止，均通过。测试使用可控时钟推进完整 48 秒，截图和结果在 evidence/story-*。真机手机尚未验证。复验：node scripts/verify-story.mjs。
+
+## Go map 整页滚动叙事
+
+新增 `/explore/go-map/` 与完整文字版 `/blog/go-map-storage/`。GSAP ScrollTrigger 驱动十幕背景、结构展开与镜头转场，支持倒滚、中段刷新、查找结果切换与索引 N 调整。1440×900、640×900、390×844 本地浏览器检查全部通过；减少动态效果和无 JavaScript 模式下十个静态帧完整可读。类型检查、构建通过。原 iCloud Markdown 未修改。详见 `docs/go-map-story.md`，复验：`node scripts/verify-go-map.mjs`。

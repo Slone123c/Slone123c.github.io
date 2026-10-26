@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1070" viewBox="0 0 1000 1070" role="img" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+<title>Go Map 查询过程</title>
+<desc>以 value, ok := m["alice"] 为例的查询主线：key 经哈希、directory、table、group、slot 逐层缩小范围；key 相等则命中，遇到 empty 则未命中，否则换下一个 group 继续。</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0L10 5L0 10Z" fill="#555"/>
+  </marker>
+</defs>
+<rect width="1000" height="1070" fill="#ffffff"/>
+
+<!-- 标题 -->
+<text x="240" y="40" font-size="22" fill="#222" font-weight="bold">Go Map 查询主线</text>
+<text x="240" y="66" font-size="14" fill="#555">每一层缩小一次查找范围 · 箭头上：蓝字是交出的数据，灰字是它的用途</text>
+
+<!-- 输入 -->
+<rect x="240" y="88" width="420" height="52" rx="26" fill="#e5e7eb" stroke="#555" stroke-width="1.4"/>
+<text x="450" y="120" font-size="18" fill="#222" font-weight="bold" text-anchor="middle">输入：value, ok := m["alice"]</text>
+
+<path d="M450 140 V220" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="466" y="174" font-size="14" fill="#1a5276">key "alice"，以及 map 的 seed</text>
+<text x="466" y="196" font-size="13.5" fill="#555">seed 在创建 map 时随机生成，让 key 落在哪里难以预测</text>
+
+<!-- ① 哈希 -->
+<rect x="240" y="220" width="420" height="64" rx="6" fill="#f4f9fd" stroke="#555" stroke-width="1.4"/>
+<text x="260" y="246" font-size="18" fill="#222" font-weight="bold">① 哈希：算出定位信息</text>
+<text x="260" y="270" font-size="14" fill="#555">用 key 和 seed 算出一个 64 位 hash</text>
+
+<path d="M450 284 V364" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="466" y="318" font-size="14" fill="#1a5276">hash 的最高几位（取几位由目录深度决定）</text>
+<text x="466" y="340" font-size="13.5" fill="#555">直接当作 directory 数组的下标</text>
+
+<!-- ② directory -->
+<rect x="240" y="364" width="420" height="64" rx="6" fill="#f4f9fd" stroke="#555" stroke-width="1.4"/>
+<text x="260" y="390" font-size="18" fill="#222" font-weight="bold">② directory：选 table</text>
+<text x="260" y="414" font-size="14" fill="#555">按下标读取数组项，拿到目标 table</text>
+
+<path d="M450 428 V508" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="466" y="462" font-size="14" fill="#1a5276">选中的 table，以及 H1（hash 的高 57 位）</text>
+<text x="466" y="484" font-size="13.5" fill="#555">H1 用来算出：在这张 table 里先查哪个 group</text>
+
+<!-- ③ table -->
+<rect x="240" y="508" width="420" height="64" rx="6" fill="#f4f9fd" stroke="#555" stroke-width="1.4"/>
+<text x="260" y="534" font-size="18" fill="#222" font-weight="bold">③ table：选 group</text>
+<text x="260" y="558" font-size="14" fill="#555">用 H1 定出起点 group 和后续探测顺序</text>
+
+<path d="M450 572 V652" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="466" y="606" font-size="14" fill="#1a5276">要检查的 group，以及 H2（hash 的低 7 位）</text>
+<text x="466" y="628" font-size="13.5" fill="#555">H2 用来和 group 的 8 个控制字节逐一比对</text>
+
+<!-- ④ group -->
+<rect x="240" y="652" width="420" height="64" rx="6" fill="#d6eaf8" stroke="#555" stroke-width="1.4"/>
+<text x="260" y="678" font-size="18" fill="#222" font-weight="bold">④ group：筛候选</text>
+<text x="260" y="702" font-size="14" fill="#555">用 H2 比对控制字，一次筛出候选 slot</text>
+
+<path d="M450 716 V796" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="466" y="750" font-size="14" fill="#1a5276">控制字节等于 H2 的 slot 编号（候选），以及原始 key</text>
+<text x="466" y="772" font-size="13.5" fill="#555">H2 相同不代表 key 相同，还要用 "alice" 做最终确认</text>
+
+<!-- ⑤ slot -->
+<rect x="240" y="796" width="420" height="64" rx="6" fill="#f4f9fd" stroke="#555" stroke-width="1.4"/>
+<text x="260" y="822" font-size="18" fill="#222" font-weight="bold">⑤ slot：比 key</text>
+<text x="260" y="846" font-size="14" fill="#555">逐个比较候选 slot 里存的 key 与 "alice"</text>
+
+<!-- 命中 -->
+<path d="M660 828 H740" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="700" y="818" font-size="14" fill="#1e7a46" text-anchor="middle">相等</text>
+<rect x="740" y="796" width="230" height="64" rx="6" fill="#d5f5e3" stroke="#555" stroke-width="1.4"/>
+<text x="756" y="822" font-size="15" fill="#1e7a46" font-weight="bold">命中：取同一 slot 的 value</text>
+<text x="756" y="846" font-size="16" fill="#222" font-weight="bold">返回 100, true</text>
+
+<path d="M450 860 V916" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="466" y="893" font-size="14" fill="#555">所有候选的 key 都不是 "alice"</text>
+
+<!-- 判断 empty -->
+<rect x="240" y="916" width="420" height="64" rx="6" fill="#fdebd0" stroke="#555" stroke-width="1.4"/>
+<text x="260" y="942" font-size="18" fill="#222" font-weight="bold">当前 group 有 empty 槽位吗？</text>
+<text x="260" y="966" font-size="14" fill="#555">有 empty，说明 key 不会出现在更后面</text>
+
+<!-- 未命中 -->
+<path d="M660 948 H740" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="700" y="938" font-size="14" fill="#555" text-anchor="middle">有</text>
+<rect x="740" y="916" width="230" height="64" rx="6" fill="#f7f7f7" stroke="#555" stroke-width="1.4"/>
+<text x="756" y="942" font-size="15" fill="#555" font-weight="bold">未命中：value 取零值</text>
+<text x="756" y="966" font-size="16" fill="#222" font-weight="bold">返回 0, false</text>
+
+<!-- 回环：继续探测 -->
+<path d="M240 948 H150 V684 H240" fill="none" stroke="#555" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="138" y="790" font-size="14" fill="#b9770e" font-weight="bold" text-anchor="end">没有</text>
+<text x="138" y="812" font-size="14" fill="#555" text-anchor="end">按探测顺序</text>
+<text x="138" y="834" font-size="14" fill="#555" text-anchor="end">换下一个 group</text>
+<text x="138" y="856" font-size="14" fill="#555" text-anchor="end">H2 和 key 不变</text>
+
+<!-- 底部说明 -->
+<text x="240" y="1030" font-size="14" fill="#777">①—⑤ 对应 2.2–2.4 节；示例中的具体位置与数字在那里逐步展开。</text>
+</svg>
