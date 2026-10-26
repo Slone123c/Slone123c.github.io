@@ -42,3 +42,5 @@ Astro 7 显式使用 @astrojs/markdown-remark 的 unified processor，schema 从
 ## Go map 整页滚动叙事
 
 新增 `/explore/go-map/` 与完整文字版 `/blog/go-map-storage/`。GSAP ScrollTrigger 驱动十幕背景、结构展开与镜头转场，支持倒滚、中段刷新、查找结果切换与索引 N 调整。1440×900、640×900、390×844 本地浏览器检查全部通过；减少动态效果和无 JavaScript 模式下十个静态帧完整可读。类型检查、构建通过。原 iCloud Markdown 未修改。详见 `docs/go-map-story.md`，复验：`node scripts/verify-go-map.mjs`。
+
+Go map 已增加整页自动播放、暂停/继续、重播与倍速；自动播放测试脚本为 `scripts/verify-go-map-autoplay.mjs`，详见 `docs/go-map-story.md`。

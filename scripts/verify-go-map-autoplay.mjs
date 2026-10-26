@@ -1,0 +1,51 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+const origin=process.env.VERIFY_URL||'http://localhost:4321/';
+const browser=await chromium.launch();const results=[];
+await mkdir('evidence/go-map-autoplay',{recursive:true});
+try{
+ for(const width of [1440,390]){
+  const page=await browser.newPage({viewport:{width,height:width===390?844:900},reducedMotion:'no-preference'});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+  page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
+  await page.clock.install();
+  await page.goto(new URL('explore/go-map/?autoplay=1&speed=2',origin).href);
+  await page.getByRole('button',{name:'暂停播放',exact:true}).waitFor();
+  await page.clock.runFor(4500);
+  assert.ok(await page.evaluate(()=>scrollY>500),'auto playback advances whole page');
+  assert.ok(Number(await page.locator('.map-scene').nth(1).evaluate(e=>getComputedStyle(e).opacity))>.98);
+  await page.getByRole('button',{name:'暂停播放',exact:true}).click();
+  const paused=await page.evaluate(()=>scrollY);
+  await page.clock.runFor(5000);
+  assert.equal(await page.evaluate(()=>scrollY),paused,'pause stops page motion');
+  await page.getByRole('button',{name:'自动播放',exact:true}).click();
+  await page.clock.runFor(4500);
+  assert.ok(await page.evaluate(()=>scrollY)>paused,'resume advances');
+  await page.mouse.wheel(0,80);await page.clock.runFor(150);
+  await page.getByRole('button',{name:'自动播放',exact:true}).waitFor();
+  const manual=await page.evaluate(()=>scrollY);
+  await page.getByRole('button',{name:'自动播放',exact:true}).click();
+  await page.clock.runFor(100);
+  assert.ok(Math.abs(await page.evaluate(()=>scrollY)-manual)<2,'resume after manual input preserves position');
+  await page.getByRole('button',{name:'从头播放',exact:true}).click();
+  await page.clock.runFor(100);
+  assert.equal(await page.evaluate(()=>scrollY),0,'replay starts at first scene');
+  await page.getByRole('combobox',{name:'播放速度'}).selectOption('1');
+  assert.equal(await page.getByRole('combobox',{name:'播放速度'}).inputValue(),'1');
+  await page.getByRole('combobox',{name:'播放速度'}).selectOption('2');
+  await page.clock.runFor(8500);
+  await page.screenshot({path:`evidence/go-map-autoplay/${width}-playing.png`});
+  await page.clock.runFor(32000);
+  await page.getByRole('button',{name:'再次播放',exact:true}).waitFor();
+  assert.ok((await page.locator('.map-player [role="status"]').innerText()).includes('已播放完毕'));
+  assert.ok(Number(await page.locator('.map-scene').nth(9).evaluate(e=>getComputedStyle(e).opacity))>.98);
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  assert.deepEqual(errors,[]);
+  results.push({width,autoStart:true,pause:true,resume:true,manualTakeover:true,replay:true,speed:true,completion:true,errors:0});
+  await page.close();
+ }
+ await writeFile('evidence/go-map-autoplay/results.json',JSON.stringify({origin,results},null,2));
+ console.log(JSON.stringify({origin,results}));
+}finally{await browser.close();}
