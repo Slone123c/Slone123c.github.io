@@ -3,11 +3,14 @@ title: 亲手调整一条正弦波
 description: 从振幅与频率出发，把公式变成可以播放、暂停和探索的波形。
 pubDate: 2026-10-26
 interactive:
-  path: explore/algorithm/
-  label: 打开独立实验
+  path: explore/wave-story/
+  label: 把这篇文章变成动画，开始交互讲解
 ---
 
 import App from '../../experiences/algorithm/App';
+import { sitePath } from '../../lib/path';
+
+<a className="experiment-link" href={sitePath('explore/wave-story/')}>播放这篇文章：四步理解一条波 →</a>
 
 正弦波可以写成 `y = A × sin(2πfx + φ)`。振幅 A 决定波的高度，频率 f 决定同一段距离里出现多少个周期。
 

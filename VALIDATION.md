@@ -32,3 +32,9 @@
 Astro 7 显式使用 @astrojs/markdown-remark 的 unified processor，schema 从 astro/zod 导入。rehype-mermaid 即使使用 pre-mermaid 策略，模块加载也需要 playwright 包；CI 只需安装包，不需要下载浏览器。只有本地浏览器验收需安装 Chromium。
 
 参考：[Astro 官方 GitHub Pages 部署](https://docs.astro.build/en/guides/deploy/github/)、[rehype-mermaid 策略说明](https://github.com/remcohaszing/rehype-mermaid)。
+
+## 动画文章验证（2026-10-26）
+
+新增 /explore/wave-story/，把原正弦波文章拆为点、振幅、频率、相位四步。支持手动章节切换、12 秒一章的自动讲解、动画播放/暂停、相位逐帧拖动与采样点。所有动画初始暂停，切后台自动暂停。原文顶部及文末提供入口。
+
+本地类型检查 0 错误/警告/提示，静态构建成功。1280px 与 390px Chromium 验证动画更新、暂停后静止、参数逐步解锁、键盘调节、四步自动推进与最终停止，均通过。测试使用可控时钟推进完整 48 秒，截图和结果在 evidence/story-*。真机手机尚未验证。复验：node scripts/verify-story.mjs。

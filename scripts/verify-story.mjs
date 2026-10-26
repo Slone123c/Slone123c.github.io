@@ -1,0 +1,55 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+const origin=process.env.VERIFY_URL||'http://localhost:4321/';
+const browser=await chromium.launch();
+const results=[];
+await mkdir('evidence',{recursive:true});
+try{
+ for(const width of [1280,390]){
+  const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
+  const page=await context.newPage();const errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+  page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
+  assert.equal((await page.goto(new URL('explore/wave-story/',origin).href)).status(),200);
+  await page.locator('astro-island[ssr]').waitFor({state:'detached'});
+  const wave=page.locator('[data-story-wave]');
+  assert.ok(await page.getByRole('slider',{name:'故事振幅'}).isDisabled());
+  await page.getByRole('button',{name:'播放动画',exact:true}).click();
+  const before=await wave.getAttribute('points');
+  await page.waitForFunction(p=>document.querySelector('[data-story-wave]').getAttribute('points')!==p,before);
+  await page.getByRole('button',{name:'暂停动画',exact:true}).click();
+  const paused=await wave.getAttribute('points');await page.waitForTimeout(100);
+  assert.equal(await wave.getAttribute('points'),paused);
+  await page.getByRole('button',{name:'下一步 →',exact:true}).click();
+  assert.ok(await page.getByRole('slider',{name:'故事振幅'}).isEnabled());
+  await page.getByRole('slider',{name:'故事振幅'}).focus();await page.keyboard.press('ArrowRight');
+  assert.equal(await page.getByRole('slider',{name:'故事振幅'}).inputValue(),'56');
+  await page.getByRole('button',{name:'下一步 →',exact:true}).click();
+  assert.ok(await page.getByRole('slider',{name:'故事频率'}).isEnabled());
+  await page.getByRole('slider',{name:'故事频率'}).focus();await page.keyboard.press('ArrowRight');
+  assert.equal(await page.getByRole('slider',{name:'故事频率'}).inputValue(),'2.1');
+  await page.getByRole('button',{name:'下一步 →',exact:true}).click();
+  assert.ok(await page.getByRole('button',{name:'下一步 →',exact:true}).isDisabled());
+  await page.getByRole('checkbox',{name:'显示采样点'}).check();
+  assert.equal(await page.locator('[data-story-wave] ~ g circle').count(),13);
+  await page.getByRole('button',{name:'播放动画',exact:true}).click();
+  await page.getByRole('slider',{name:'故事相位'}).focus();await page.keyboard.press('ArrowRight');
+  await page.getByRole('button',{name:'播放动画',exact:true}).waitFor();
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:`evidence/story-${width}.png`,fullPage:true});
+  await page.clock.install();
+  await page.getByRole('button',{name:'自动讲解',exact:true}).click();
+  await page.clock.runFor(12100);
+  assert.equal(await page.locator('[aria-current="step"]').innerText(),'02\n把高度交给振幅');
+  await page.clock.runFor(36500);
+  await page.getByRole('button',{name:'播放动画',exact:true}).waitFor();
+  assert.equal(await page.locator('[aria-current="step"]').innerText(),'04\n让时间开始流动');
+  assert.equal(await page.getByRole('progressbar').getAttribute('aria-valuenow'),'100');
+  assert.deepEqual(errors,[]);
+  await context.close();results.push({width,animation:true,controls:true,autoNarration:true,errors:0});
+ }
+ await writeFile('evidence/story-results.json',JSON.stringify({origin,results},null,2));
+ console.log(JSON.stringify({origin,results}));
+}finally{await browser.close();}

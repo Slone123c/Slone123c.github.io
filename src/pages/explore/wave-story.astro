@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import Story from '../../experiences/wave-story/Story';
+import { sitePath } from '../../lib/path';
+---
+<Base title="一条波是怎样动起来的" description="一篇可以播放的文章：从圆周运动到振幅、频率与相位，分四步理解正弦波。">
+  <p class="eyebrow">AN INTERACTIVE ARTICLE / 交互式文章</p>
+  <h1>一条波，是怎样动起来的？</h1>
+  <p class="intro">不用先记住公式。跟着一个点出发，读一小段，动手试一下，再往前一步。</p>
+  <Story client:load />
+  <p style="margin-top:48px"><a href={sitePath('blog/algorithm/')}>← 阅读原始文章</a><span style="margin:0 16px;color:#bac6bd">/</span><a href={sitePath('explore/algorithm/')}>打开自由实验</a></p>
+  <noscript><p>这个讲解需要 JavaScript 才能播放动画。你可以<a href={sitePath('blog/algorithm/')}>阅读文字版文章</a>。</p></noscript>
+</Base>
