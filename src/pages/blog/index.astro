@@ -1,0 +1,7 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { sitePath } from '../../lib/path';
+const posts=(await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+---
+<Base title="文章"><p class="eyebrow">WRITING</p><h1>文章</h1><ul class="posts">{posts.map(p=><li><time>{p.data.pubDate.toISOString().slice(0,10)}</time><h2><a href={sitePath(`blog/${p.id}/`)}>{p.data.title}</a></h2><p>{p.data.description}</p></li>)}</ul></Base>

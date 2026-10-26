@@ -1,0 +1,6 @@
+---
+import Base from '../../layouts/Base.astro';
+import App from '../../experiences/algorithm/App';
+import { sitePath } from '../../lib/path';
+---
+<Base title="正弦波实验"><p class="eyebrow">EXPLORE / 001</p><h1>让公式动起来</h1><p class="intro">改变振幅和频率，观察一条正弦波。每一次调整都即时生效。</p><App client:load /><p><a href={sitePath('blog/algorithm/')}>← 回到文章，了解公式</a></p></Base>

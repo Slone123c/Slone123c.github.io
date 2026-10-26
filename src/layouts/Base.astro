@@ -1,0 +1,8 @@
+---
+import { sitePath } from '../lib/path';
+import '../styles/global.css';
+interface Props { title: string; description?: string }
+const { title, description = 'Slone 的技术笔记与交互实验。' } = Astro.props;
+---
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><meta name="description" content={description} /><title>{title} · Slone</title><link rel="icon" type="image/svg+xml" href={sitePath('favicon.svg')} /></head>
+<body><a class="skip" href="#main">跳到正文</a><header><a class="brand" href={sitePath()}>Slone<span> / 笔记与实验</span></a><nav aria-label="主导航"><a href={sitePath('blog/')}>文章</a><a href={sitePath('explore/algorithm/')}>实验</a><a href={sitePath('about/')}>关于</a></nav></header><main id="main"><slot /></main><footer><span>Slone · 记录理解发生的过程</span><a href="https://github.com/Slone123c/Slone123c.github.io">GitHub ↗</a></footer></body></html>

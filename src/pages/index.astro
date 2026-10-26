@@ -1,0 +1,7 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { sitePath } from '../lib/path';
+const posts = (await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+---
+<Base title="笔记与实验"><p class="eyebrow">SLONE / FIELD NOTES</p><h1>把想法写下来，<br />也让它动起来。</h1><p class="intro">这里存放技术笔记，以及可以亲手调整的交互实验。读一篇文章，试一个想法。</p><h2>最新文章</h2><ul class="posts">{posts.map(post=><li><time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0,10)}</time>{post.data.interactive && <span class="tag">含交互实验</span>}<h2><a href={sitePath(`blog/${post.id}/`)}>{post.data.title} ↗</a></h2><p>{post.data.description}</p></li>)}</ul></Base>

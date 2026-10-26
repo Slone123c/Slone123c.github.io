@@ -1,0 +1,15 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { sitePath } from '../../lib/path';
+export async function getStaticPaths(){return (await getCollection('blog')).map(post=>({params:{slug:post.id},props:{post}}));}
+const {post}=Astro.props;
+const {Content}=await render(post);
+---
+<Base title={post.data.title} description={post.data.description}><article class="prose"><a href={sitePath('blog/')}>← 所有文章</a><p class="eyebrow"><time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0,10)}</time></p><h1>{post.data.title}</h1><Content />{post.data.interactive && <a class="experiment-link" href={sitePath(post.data.interactive.path)}>{post.data.interactive.label} ↗</a>}</article></Base>
+<script>
+const diagrams = document.querySelectorAll<HTMLElement>('.mermaid');
+if(diagrams.length){
+  import('mermaid').then(async ({default:mermaid})=>{mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'neutral'});await mermaid.run({nodes:diagrams});}).catch(error=>{console.error('Mermaid rendering failed',error);for(const diagram of diagrams){diagram.textContent='图表暂时无法加载，请刷新重试。';diagram.setAttribute('role','alert');}});
+}
+</script>
