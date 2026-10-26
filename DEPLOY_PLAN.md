@@ -26,15 +26,15 @@
 
 ## 1. 验证通过的定义（必须满足）
 
-- [ ] 主页与 About 均能访问，且布局可自由改写。
-- [ ] `/blog/hello/` 为普通 Markdown，没有自定义 React 交互。
-- [ ] 普通文章中的 Mermaid 流程图成功渲染，不是原始代码。
-- [ ] 普通文章中的 SVG 图片显示正常。
-- [ ] `/blog/algorithm/` 中的交互 React 程序可调节参数、播放/暂停动画。
-- [ ] `/explore/algorithm/` 能独立访问、刷新不会 404、交互正常。
-- [ ] GitHub Actions 构建完成，公网 `https://<USER>.github.io/<REPO>/` 可访问。
-- [ ] 移动端浏览器能加载交互，无前端控制台致命错误。
-- [ ] 后续新建 `.md` 不需要修改全局页面路由；新建体验只需新增源文件和可选独立路由。
+- [x] 主页与 About 均能访问，且布局可自由改写。
+- [x] `/blog/hello/` 为普通 Markdown，没有自定义 React 交互。
+- [x] 普通文章中的 Mermaid 流程图成功渲染，不是原始代码。
+- [x] 普通文章中的 SVG 图片显示正常。
+- [x] `/blog/algorithm/` 中的交互 React 程序可调节参数、播放/暂停动画。
+- [x] `/explore/algorithm/` 能独立访问、刷新不会 404、交互正常。
+- [x] GitHub Actions 构建完成，公网 `https://<USER>.github.io/<REPO>/` 可访问。
+- [ ] 移动端浏览器能加载交互，无前端控制台致命错误。（390px Chromium 模拟已通过；真机待验）
+- [x] 后续新建 `.md` 不需要修改全局页面路由；新建体验只需新增源文件和可选独立路由。
 
 ## 2. 快速开始（推荐使用随附 ZIP）
 
@@ -213,7 +213,7 @@ git push -u origin main
 ## 10. 本次交付状态和参考资料
 
 - 已完成：代码包文件生成、目录结构检查、依据官方文档核实 Pages 工作流与内容管理接口。
-- 尚未完成：受执行环境无法联网安装 npm 包影响，**未执行真实 npm 安装、Astro 构建和公网 GitHub Pages 部署**。必须在你的本地/CI 运行第 6 节验收。
+- 2026-10-26 实测更新：已完成真实 npm 安装、Node 24 类型检查与静态构建、GitHub Actions 部署及公网浏览器验证。站点：https://slone123c.github.io/ 。详细证据见 `VALIDATION.md`；真机手机仍待验。
 
 官方资料：
 

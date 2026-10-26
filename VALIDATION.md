@@ -20,7 +20,10 @@
 - 临时新增 route-proof.md：构建自动出现 /blog/route-proof/ 且进入列表，未修改全局路由；验证后删除临时文章。
 - 已查看 evidence/ 下桌面文章、窄屏实验截图：控件完整可见，页面无横向溢出。
 - 真机手机尚未验证，390px 桌面浏览器模拟通过。
-- GitHub Actions 与公网验证：待部署。
+- 首次部署 [Actions #40264149603](https://github.com/Slone123c/Slone123c.github.io/actions/runs/40264149603)：build 与 deploy 均成功。
+- 公网 https://slone123c.github.io/ ：同一套 12 项浏览器验证全部通过，结果位于 evidence/results.json，截图为公网版本。
+- 正在以一次独立 Markdown 更新验证自动发布。
+- npm audit：Mermaid → KaTeX 链上有 3 项 low 级依赖提示；无 moderate/high/critical，不阻塞本次 P0。
 
 复验：npm ci；npm run check；npm run build；npm run preview。另开终端运行 npm run verify。首次需 npx playwright install chromium。公网复验：VERIFY_URL=https://slone123c.github.io/ npm run verify。
 
