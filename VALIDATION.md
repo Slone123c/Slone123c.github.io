@@ -22,7 +22,7 @@
 - 真机手机尚未验证，390px 桌面浏览器模拟通过。
 - 首次部署 [Actions #40264149603](https://github.com/Slone123c/Slone123c.github.io/actions/runs/40264149603)：build 与 deploy 均成功。
 - 公网 https://slone123c.github.io/ ：同一套 12 项浏览器验证全部通过，结果位于 evidence/results.json，截图为公网版本。
-- 正在以一次独立 Markdown 更新验证自动发布。
+- 第二次 Markdown 内容更新 a59219e 触发 [Actions #40264268343](https://github.com/Slone123c/Slone123c.github.io/actions/runs/40264268343)，build/deploy 均成功；公网文章已读回新增句子，自动更新通过。
 - npm audit：Mermaid → KaTeX 链上有 3 项 low 级依赖提示；无 moderate/high/critical，不阻塞本次 P0。
 
 复验：npm ci；npm run check；npm run build；npm run preview。另开终端运行 npm run verify。首次需 npx playwright install chromium。公网复验：VERIFY_URL=https://slone123c.github.io/ npm run verify。
