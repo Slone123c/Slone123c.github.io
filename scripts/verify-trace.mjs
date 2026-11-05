@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 const origin = process.env.VERIFY_URL || 'http://localhost:4321/';
-const names = ['Button','Tag','Marker','ArticleCard','Outline','Callout','SpecSheet','MathBlock','Compare','CodeBlock','Cells','Stepper','Figure','Diagram','HomePage','ArticlePage','SystemPage','ProfilePage'];
+const names = ['HomePage','ArticlePage','SystemPage','ProfilePage'];
 const browser = await chromium.launch();
 try {
   for (const width of [1280, 390]) {
@@ -20,7 +20,8 @@ try {
       assert.deepEqual(errors, [], `${name} @${width}`);
     }
     await page.goto(new URL('design/', origin).href, { waitUntil: 'load' });
-    assert.equal(await page.locator('iframe[data-autosize]').count(), 14);
+    assert.equal(await page.locator('iframe[data-autosize]').count(), 0);
+    assert.equal((await page.request.get(new URL('trace/preview/Button.html', origin).href)).status(), 404);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `overflow design @${width}`);
     assert.deepEqual(errors, [], `design @${width}`);
   }

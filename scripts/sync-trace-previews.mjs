@@ -1,5 +1,5 @@
 // 把 Trace 的预览页和页面范例生成成 public/trace/ 下可独立打开的静态页。
-import { copyFile, readdir, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 const src = 'docs/design-system/trace';
 const out = 'public/trace';
 await copyFile(`${src}/components/bundle.js`, `${out}/assets/bundle.js`);
@@ -18,8 +18,11 @@ const responsive = `<style>
 @media(max-width:1000px){.pg{grid-template-columns:minmax(0,1fr)!important;gap:0!important}.pg aside.side{display:none}.home .hero{grid-template-columns:minmax(0,1fr)!important}.home .grid{grid-template-columns:minmax(0,1fr)!important}.sw .hero-num,.sw .hero-txt,.sw .sec-h,.sw .sec-b{grid-column:1/-1!important}.sw .sec-b{border-top:0}.sw .hero-num{font-size:120px;line-height:100px}}
 @media(max-width:560px){.pg,.home,.sw{padding-left:16px!important;padding-right:16px!important}.pf{padding-left:16px;padding-right:16px}.pg h1,.sw h1,.home .hero h1{font-size:38px!important;line-height:44px!important}.sw .info div{grid-column:span 6;margin-bottom:8px}.nav nav a{margin-left:12px!important}}
 </style>`;
-for (const file of await readdir(`${src}/previews`)) {
-  const name = file.replace('.html', '');
+await rm(`${out}/preview`, { recursive: true, force: true });
+await mkdir(`${out}/preview`);
+// 组件介绍只留在 docs，站点只发布封面和页面范例。
+for (const name of ['Cover', ...Object.keys(banners)]) {
+  const file = `${name}.html`;
   // 第一行是 @dsCard 注释，留在 doctype 之前会进入怪异模式。
   let html = (await readFile(`${src}/previews/${file}`, 'utf8')).replace(/^<!-- @dsCard[^\n]*\n/, '');
   const head = `<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script>`;
