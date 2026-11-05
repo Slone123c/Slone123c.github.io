@@ -8,5 +8,5 @@ export default defineConfig({
   site: `https://${owner.toLowerCase()}.github.io`,
   base: repo.toLowerCase() === `${owner.toLowerCase()}.github.io` ? '/' : `/${repo}`,
   trailingSlash: 'always', output: 'static', integrations: [react(), mdx()],
-  markdown: { syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] }, processor: unified({ rehypePlugins: [[rehypeMermaid, { strategy: 'pre-mermaid' }]] }) }
+  markdown: { syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] }, shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } }, processor: unified({ rehypePlugins: [[rehypeMermaid, { strategy: 'pre-mermaid' }]] }) }
 });

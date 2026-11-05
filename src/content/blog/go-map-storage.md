@@ -1,6 +1,7 @@
 ---
 title: Go map 实战：从 K8s 集合与索引看存储和查找
 description: 从空结构体的内存布局，到 Swiss Table 的控制字与探测，再到 client-go 的倒排索引。
+kicker: Data Structure
 pubDate: 2026-10-26
 interactive:
   path: explore/go-map/

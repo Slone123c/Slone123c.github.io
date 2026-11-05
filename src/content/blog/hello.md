@@ -1,6 +1,7 @@
 ---
 title: 从一篇 Markdown 开始
 description: 用普通文本记录想法，用 Mermaid 和 SVG 让结构更清楚。
+kicker: Method
 pubDate: 2026-10-26
 ---
 

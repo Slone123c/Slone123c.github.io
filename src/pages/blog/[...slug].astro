@@ -1,15 +1,66 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { getPosts } from '../../lib/posts';
 import { sitePath } from '../../lib/path';
-export async function getStaticPaths(){return (await getCollection('blog')).map(post=>({params:{slug:post.id},props:{post}}));}
-const {post}=Astro.props;
-const {Content}=await render(post);
+export async function getStaticPaths() {
+  return (await getPosts()).map(item => ({ params: { slug: item.post.id }, props: item }));
+}
+const { post, no, minutes, date } = Astro.props;
+const { Content, headings } = await render(post);
+const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
+// 已手写「1.」编号的文章不再叠加自动章节号。
+const handNumbered = toc.some(h => /^\d+\./.test(h.text));
 ---
-<Base title={post.data.title} description={post.data.description}><article class="prose"><a href={sitePath('blog/')}>← 所有文章</a><p class="eyebrow"><time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0,10)}</time></p><h1>{post.data.title}</h1><Content />{post.data.interactive && <a class="experiment-link" href={sitePath(post.data.interactive.path)}>{post.data.interactive.label} ↗</a>}</article></Base>
+<Base title={post.data.title} description={post.data.description}>
+  <div class="article-layout">
+    <article class:list={['tr-prose', 'article', { 'auto-number': !handNumbered }]}>
+      <a class="back" href={sitePath('blog/')}>← 所有文章</a>
+      <div class="tr-kicker">{post.data.kicker} · No.{no}</div>
+      <h1>{post.data.title}</h1>
+      <p class="lead">{post.data.description}</p>
+      <div class="article-meta">
+        <time datetime={post.data.pubDate.toISOString()}>{date}</time>
+        <span>{minutes} min</span>
+        {post.data.interactive && <span class="tr-tag tr-tag--signal">含交互</span>}
+      </div>
+      <Content />
+      {post.data.interactive && <a class="tr-btn tr-btn--md tr-btn--primary experiment-link" href={sitePath(post.data.interactive.path)}>{post.data.interactive.label} →</a>}
+    </article>
+    {toc.length > 0 && (
+      <aside class="article-side">
+        <nav class="tr-outline" aria-label="本文目录">
+          <div class="tr-outline__title">ON THIS PAGE</div>
+          <ol>{toc.map(h => <li class:list={['tr-outline__item', { 'tr-outline__item--l2': h.depth === 3 }]}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+      </aside>
+    )}
+  </div>
+</Base>
 <script>
 const diagrams = document.querySelectorAll<HTMLElement>('.mermaid');
-if(diagrams.length){
-  import('mermaid').then(async ({default:mermaid})=>{mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'neutral'});await mermaid.run({nodes:diagrams});}).catch(error=>{console.error('Mermaid rendering failed',error);for(const diagram of diagrams){diagram.textContent='图表暂时无法加载，请刷新重试。';diagram.setAttribute('role','alert');}});
+if (diagrams.length) {
+  import('mermaid').then(async ({ default: mermaid }) => {
+    const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: dark ? 'dark' : 'neutral' });
+    await mermaid.run({ nodes: diagrams });
+  }).catch(error => {
+    console.error('Mermaid rendering failed', error);
+    for (const diagram of diagrams) {
+      diagram.textContent = '图表暂时无法加载，请刷新重试。';
+      diagram.setAttribute('role', 'alert');
+    }
+  });
 }
+const links = new Map([...document.querySelectorAll<HTMLAnchorElement>('.tr-outline a')].map(a => [decodeURIComponent(a.hash.slice(1)), a.parentElement!]));
+const observer = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    links.forEach(li => li.classList.remove('is-active'));
+    const li = links.get(entry.target.id);
+    li?.classList.add('is-active');
+    li?.scrollIntoView({ block: 'nearest' });
+  }
+}, { rootMargin: '0px 0px -75% 0px' });
+links.forEach((_, id) => { const el = document.getElementById(id); if (el) observer.observe(el); });
 </script>

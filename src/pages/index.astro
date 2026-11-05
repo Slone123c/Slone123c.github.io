@@ -1,7 +1,88 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getPosts } from '../lib/posts';
 import { sitePath } from '../lib/path';
-const posts = (await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+const posts = await getPosts();
+const steps = [
+  { cell: 'hash', title: '① 哈希', desc: '把 key 变成后面每一层都要用的定位信息。' },
+  { cell: 'dir', title: '② directory', desc: '用哈希高位选出一张 table。' },
+  { cell: 'table', title: '③ table', desc: '用 H1 决定 group 的访问顺序。' },
+  { cell: 'group', title: '④ group', desc: '用控制字筛出候选 slot。' },
+  { cell: 'slot', title: '⑤ slot', desc: '比较完整 key，相等才取出 value。' },
+];
 ---
-<Base title="笔记与实验"><p class="eyebrow">SLONE / FIELD NOTES</p><h1>把想法写下来，<br />也让它动起来。</h1><p class="intro">这里存放技术笔记，以及可以亲手调整的交互实验。读一篇文章，试一个想法。</p><h2>最新文章</h2><ul class="posts">{posts.map(post=><li><time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0,10)}</time>{post.data.interactive && <span class="tag">含交互实验</span>}<h2><a href={sitePath(`blog/${post.id}/`)}>{post.data.title} ↗</a></h2><p>{post.data.description}</p></li>)}</ul></Base>
+<Base title="笔记与实验">
+  <section class="hero">
+    <div>
+      <div class="tr-kicker">Engineering Notebook</div>
+      <h1>把底层原理<br />讲到<span>看得见</span>。</h1>
+      <p class="lead">这里存放技术笔记，以及可以亲手调整的交互实验。读一篇文章，试一个想法。</p>
+      <div class="tr-row">
+        <a class="tr-btn tr-btn--md tr-btn--primary" href={sitePath('explore/go-map/')}>从 Go map 开始 →</a>
+        <a class="tr-btn tr-btn--md tr-btn--secondary" href={sitePath('blog/')}>全部文章</a>
+      </div>
+    </div>
+    <div class="tr-stepper" data-stepper role="group" aria-label="一次 m[key] 查找的单步演示">
+      <div class="tr-stepper__bar">
+        <span class="tr-stepper__count"><b data-count>1</b> / {steps.length}</span>
+        <div class="tr-stepper__ticks">
+          {steps.map((s, i) => <button type="button" class:list={['tr-stepper__tick', { 'is-now': i === 0 }]} aria-label={`第 ${i + 1} 步：${s.title}`} data-tick={i}></button>)}
+        </div>
+      </div>
+      <div class="tr-stepper__stage">
+        <div class="tr-cells">
+          <div class="tr-cells__label">m[key] · Go 1.24 Swiss Table</div>
+          <div class="tr-cells__row">
+            {steps.map((s, i) => <div class:list={['tr-cell', i === 0 ? 'tr-cell--active' : '']} data-cell={i}><div class="tr-cell__box">{s.cell}</div></div>)}
+          </div>
+        </div>
+      </div>
+      <div aria-live="polite">
+        <h2 class="tr-stepper__title" data-title>{steps[0].title}</h2>
+        <p class="tr-stepper__desc" data-desc>{steps[0].desc}</p>
+      </div>
+      <div class="tr-stepper__nav">
+        <button type="button" class="tr-btn tr-btn--sm tr-btn--secondary" data-prev disabled>← 上一步</button>
+        <button type="button" class="tr-btn tr-btn--sm tr-btn--secondary" data-next>下一步 →</button>
+      </div>
+      <script type="application/json" data-steps set:html={JSON.stringify(steps)}></script>
+    </div>
+  </section>
+  <div class="sec-head"><h2>最近更新</h2><a href={sitePath('blog/')}>全部 →</a></div>
+  <div class="card-grid">{posts.map(p => <ArticleCard {...p} />)}</div>
+</Base>
+<script>
+  const root = document.querySelector<HTMLElement>('[data-stepper]');
+  if (root) {
+    const steps = JSON.parse(root.querySelector('[data-steps]')!.textContent!) as { title: string; desc: string }[];
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    let now = 0;
+    const show = (i: number) => {
+      now = i;
+      root.querySelector('[data-count]')!.textContent = String(i + 1);
+      root.querySelector('[data-title]')!.textContent = steps[i].title;
+      root.querySelector('[data-desc]')!.textContent = steps[i].desc;
+      root.querySelectorAll('[data-tick]').forEach((t, j) => {
+        t.classList.toggle('is-now', j === i);
+        t.classList.toggle('is-done', j < i);
+      });
+      root.querySelectorAll('[data-cell]').forEach((c, j) => {
+        const last = i === steps.length - 1;
+        c.classList.toggle('tr-cell--active', j === i && !last);
+        c.classList.toggle('tr-cell--hit', j === i && last);
+        c.classList.toggle('tr-cell--ref', j < i);
+      });
+      prev.disabled = i === 0;
+      next.disabled = i === steps.length - 1;
+    };
+    prev.addEventListener('click', () => show(now - 1));
+    next.addEventListener('click', () => show(now + 1));
+    root.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' && now > 0) show(now - 1);
+      if (e.key === 'ArrowRight' && now < steps.length - 1) show(now + 1);
+    });
+    root.querySelectorAll<HTMLElement>('[data-tick]').forEach(t => t.addEventListener('click', () => show(Number(t.dataset.tick))));
+  }
+</script>

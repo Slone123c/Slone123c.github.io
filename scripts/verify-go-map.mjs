@@ -51,7 +51,7 @@ try{
    await image.evaluate(img=>img.decode());
    assert.ok(await image.evaluate(img=>img.complete&&img.naturalWidth>0));
   }
-  assert.equal(await page.getByRole('link',{name:'滚动进入 Go map 内部 ↗'}).getAttribute('href'),'/explore/go-map/');
+  assert.equal(await page.getByRole('link',{name:'滚动进入 Go map 内部 →'}).getAttribute('href'),'/explore/go-map/');
   assert.deepEqual(errors,[]);
   results.push({width,height,scrollScenes:10,reverse:true,refresh:true,lookup:true,indexer:true,sourceImages:9,errors:0});
   await context.close();

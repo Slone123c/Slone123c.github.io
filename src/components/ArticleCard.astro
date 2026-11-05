@@ -1,0 +1,13 @@
+---
+import { sitePath } from '../lib/path';
+const { post, no, minutes, date } = Astro.props;
+---
+<a class="tr-card tr-card--link" href={sitePath(`blog/${post.id}/`)}>
+  <div class="tr-card__top"><span class="tr-card__no">No.{no}</span><span class="tr-card__kicker">{post.data.kicker}</span></div>
+  <h3 class="tr-card__title">{post.data.title}</h3>
+  <p class="tr-card__summary">{post.data.description}</p>
+  <div class="tr-card__foot">
+    <div class="tr-card__tags">{post.data.interactive && <span class="tr-tag tr-tag--signal">含交互</span>}</div>
+    <span class="tr-card__meta">{date} · {minutes} min</span>
+  </div>
+</a>

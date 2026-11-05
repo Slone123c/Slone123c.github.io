@@ -75,19 +75,19 @@ export default function Story() {
       <div className={styles.stageHeader}><span>WAVE LAB / 0{chapter + 1}</span><span role="status">{playing ? (auto ? '自动讲解中' : '动画播放中') : '已暂停'}</span></div>
       <div className={styles.formula}>{current.formula}</div>
       <svg viewBox="0 0 800 280" role="img" aria-label={`第 ${chapter + 1} 步，振幅 ${amplitude}，频率 ${frequency.toFixed(1)}，相位 ${phase.toFixed(2)}`}>
-        <defs><pattern id="wave-story-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#293847" strokeWidth="1" /></pattern></defs>
+        <defs><pattern id="wave-story-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="var(--line)" strokeWidth="1" /></pattern></defs>
         <rect width="800" height="280" fill="url(#wave-story-grid)" />
-        <path d="M0 140H800" stroke="#64788b" strokeDasharray="4 6" />
-        <circle cx="90" cy="140" r={amplitude} fill="none" stroke="#6b8193" />
-        <path d={`M90 140L${pointX} ${pointY}`} stroke="#f4d374" strokeWidth="2" />
-        <path d={`M${pointX} ${pointY}H220`} stroke="#f4d374" strokeDasharray="4 4" opacity=".6" />
-        <circle cx={pointX} cy={pointY} r="6" fill="#f4d374" />
+        <path d="M0 140H800" stroke="var(--line-strong)" strokeDasharray="4 6" />
+        <circle cx="90" cy="140" r={amplitude} fill="none" stroke="var(--line-strong)" />
+        <path d={`M90 140L${pointX} ${pointY}`} stroke="var(--signal)" strokeWidth="2" />
+        <path d={`M${pointX} ${pointY}H220`} stroke="var(--signal)" strokeDasharray="4 4" opacity=".6" />
+        <circle cx={pointX} cy={pointY} r="6" fill="var(--signal)" />
         <g transform="translate(220 0)">
-          <polyline data-story-wave points={points} fill="none" stroke="#f4d374" strokeWidth="3" vectorEffect="non-scaling-stroke" />
-          <circle cx="0" cy={waveY(0)} r="6" fill="#f4d374" />
-          {chapter === 1 && <g stroke="#8fe0c0" fill="#8fe0c0"><path d={`M145 140V${140 - amplitude}`} strokeWidth="2" /><text x="157" y={140 - amplitude / 2} stroke="none" fontSize="15">A = {amplitude}</text></g>}
-          {chapter >= 2 && <g fill="#9eb1c1" fontSize="12"><text x="0" y="258">0</text><text x="540" y="258">时间 t →</text></g>}
-          {samples && Array.from({ length: 13 }, (_, i) => <g key={i}><path d={`M${i * 44} 140V${waveY(i * 44)}`} stroke="#8fe0c0" opacity=".4" /><circle cx={i * 44} cy={waveY(i * 44)} r="4" fill="#8fe0c0" /></g>)}
+          <polyline data-story-wave points={points} fill="none" stroke="var(--signal)" strokeWidth="3" vectorEffect="non-scaling-stroke" />
+          <circle cx="0" cy={waveY(0)} r="6" fill="var(--signal)" />
+          {chapter === 1 && <g stroke="var(--cobalt)" fill="var(--cobalt)"><path d={`M145 140V${140 - amplitude}`} strokeWidth="2" /><text x="157" y={140 - amplitude / 2} stroke="none" fontSize="15">A = {amplitude}</text></g>}
+          {chapter >= 2 && <g fill="var(--ink-muted)" fontSize="12"><text x="0" y="258">0</text><text x="540" y="258">时间 t →</text></g>}
+          {samples && Array.from({ length: 13 }, (_, i) => <g key={i}><path d={`M${i * 44} 140V${waveY(i * 44)}`} stroke="var(--cobalt)" opacity=".4" /><circle cx={i * 44} cy={waveY(i * 44)} r="4" fill="var(--cobalt)" /></g>)}
         </g>
       </svg>
       <p className={styles.caption}>{current.hint}</p>
