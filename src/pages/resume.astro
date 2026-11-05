@@ -1,52 +1,81 @@
 ---
 import Base from '../layouts/Base.astro';
-import { strengths, jobs, projects, courses } from '../lib/resume';
+import { intro, strengths, deltas, jobs, projects, courses } from '../lib/resume';
+import { sitePath } from '../lib/path';
+const pct = (d: { before: number; after: number }, v: number) => `${Math.max(2, (v / Math.max(d.before, d.after)) * 100)}%`;
 ---
-<Base title="简历" description="Slone 的公开版简历：Golang 后端开发，裸金属 IaaS、异步任务与数据同步。">
+<Base title="简历" description="Slone 的公开版简历：Golang 后端开发。">
   <section class="cv-hero">
     <div>
-      <div class="tr-kicker">Resume</div>
-      <h1>你好，我是 Slone。</h1>
-      <p class="cv-role">Golang 后端开发<span>/</span>裸金属 IaaS<span>/</span>异步任务</p>
-      <p class="lead">我做让机器老实听话的系统：服务器纳管、任务编排、数据同步。习惯<mark>先测基线，再动手优化</mark>。</p>
+      <div class="tr-kicker">Resume · Golang 后端开发</div>
+      <h1>Slone</h1>
+      <p class="lead">{intro}</p>
+      <nav class="cv-index" aria-label="项目索引">{projects.map((p, i) => <a href={`#${p.id}`}><b>{String(i + 1).padStart(2, '0')}</b>{p.title}</a>)}</nav>
     </div>
-    <div class="tr-spec">
-      <div class="tr-spec__head">SPEC</div>
-      <dl class="tr-spec__grid">
-        <div class="tr-spec__row tr-spec__row--signal"><dt>主力语言</dt><dd><span class="tr-spec__v">Go</span><span class="tr-spec__note">Kratos · Asynq · Ent</span></dd></div>
-        <div class="tr-spec__row"><dt>领域</dt><dd><span class="tr-spec__v">IaaS</span><span class="tr-spec__note">裸金属 · 容器网络</span></dd></div>
-        <div class="tr-spec__row tr-spec__row--green"><dt>上架流程</dt><dd><span class="tr-spec__v">15 min</span><span class="tr-spec__note">原 4 小时</span></dd></div>
-        <div class="tr-spec__row tr-spec__row--green"><dt>问题定位</dt><dd><span class="tr-spec__v">18 min</span><span class="tr-spec__note">原 52 分钟</span></dd></div>
-      </dl>
+    <div class="cv-hero-fig">
+      <div class="tr-spec">
+        <div class="tr-spec__head">SPEC</div>
+        <dl class="tr-spec__grid">
+          <div class="tr-spec__row tr-spec__row--signal"><dt>主力语言</dt><dd><span class="tr-spec__v">Go</span><span class="tr-spec__note">Kratos · Asynq · Ent</span></dd></div>
+          <div class="tr-spec__row"><dt>领域</dt><dd><span class="tr-spec__v">IaaS</span><span class="tr-spec__note">裸金属 · 容器网络</span></dd></div>
+          <div class="tr-spec__row tr-spec__row--green"><dt>上架流程</dt><dd><span class="tr-spec__v">15 min</span><span class="tr-spec__note">原 4 小时</span></dd></div>
+          <div class="tr-spec__row tr-spec__row--green"><dt>纳管效率</dt><dd><span class="tr-spec__v">95%</span><span class="tr-spec__note">原 30%</span></dd></div>
+        </dl>
+      </div>
     </div>
   </section>
 
   <section class="cv-sec">
-    <div class="cv-h"><div class="cv-n">01</div><h2>个人优势</h2></div>
+    <div class="cv-h"><div class="cv-n">01</div><h2>改动前后</h2><p>每行单独按比例绘制，不跨行比较。</p></div>
+    <div class="cv-b cv-deltas">
+      {deltas.map(d => (
+        <div class="cv-delta">
+          <div class="cv-delta-k">{d.k}</div>
+          <div class="cv-delta-bars" aria-hidden="true">
+            <i class="was" style={`width:${pct(d, d.before)}`}></i>
+            <i class="now" style={`width:${pct(d, d.after)}`}></i>
+          </div>
+          <div class="cv-delta-v"><s>{d.from}</s> → <b>{d.to}</b></div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="cv-sec">
+    <div class="cv-h"><div class="cv-n">02</div><h2>个人优势</h2></div>
     <div class="cv-b cv-strengths">{strengths.map(([k, v]) => <div><h3>{k}</h3><p>{v}</p></div>)}</div>
   </section>
 
   <section class="cv-sec">
-    <div class="cv-h"><div class="cv-n">02</div><h2>工作经历</h2></div>
+    <div class="cv-h"><div class="cv-n">03</div><h2>工作经历</h2></div>
     <div class="cv-b">{jobs.map(j => <article class="cv-job"><h3>{j.org} <span>· {j.role}</span></h3><ul>{j.points.map(p => <li>{p}</li>)}</ul></article>)}</div>
   </section>
 
   <section class="cv-sec">
-    <div class="cv-h"><div class="cv-n">03</div><h2>项目经历</h2></div>
+    <div class="cv-h"><div class="cv-n">04</div><h2>项目经历</h2><p>左边是做法，图里是它的结构或过程。</p></div>
     <div class="cv-b">{projects.map(p => (
-      <article class="cv-proj">
+      <article class="cv-proj" id={p.id}>
         <div class="cv-proj-top"><span class="tr-kicker">{p.kicker}</span><span>{p.role}</span></div>
         <h3>{p.title}</h3>
         <p>{p.summary}</p>
-        <ul>{p.points.map(x => <li>{Array.isArray(x) ? <><strong>{x[0]}：</strong>{x[1]}</> : x}</li>)}</ul>
-        {p.results && <div class="cv-results"><b>RESULT</b>{p.results.map(r => <span>{r}</span>)}</div>}
+        {p.spec && <div class="tr-spec cv-spec"><dl class="tr-spec__grid">{p.spec.map(s => <div class:list={['tr-spec__row', s.tone && `tr-spec__row--${s.tone}`]}><dt>{s.k}</dt><dd><span class="tr-spec__v">{s.v}</span><span class="tr-spec__note">{s.note}</span></dd></div>)}</dl></div>}
+        <div class="cv-fig" data-figure={p.figure}></div>
+        {p.invariant && <div class="tr-callout tr-callout--invariant cv-callout"><div class="tr-callout__head"><span class="tr-callout__glyph">∀</span><span class="tr-callout__label">INVARIANT</span><strong class="tr-callout__title">{p.invariant[0]}</strong></div><div class="tr-callout__body">{p.invariant[1]}</div></div>}
+        <ul>{p.points.map(x => <li>{x[2] && <span class="tr-marker tr-marker--signal">{x[2]}</span>} <strong>{x[0]}：</strong>{x[1]}</li>)}</ul>
         <p class="cv-stack">{p.stack}</p>
       </article>
     ))}</div>
   </section>
 
   <section class="cv-sec">
-    <div class="cv-h"><div class="cv-n">04</div><h2>教育经历</h2></div>
+    <div class="cv-h"><div class="cv-n">05</div><h2>教育经历</h2></div>
     <div class="cv-b cv-job"><h3>本科 <span>· 计算机科学与技术</span></h3><p>主要课程：{courses}。</p></div>
   </section>
+  <script is:inline src={sitePath('trace/assets/react.js')}></script>
+  <script is:inline src={sitePath('trace/assets/react-dom.js')}></script>
+  <script is:inline src={sitePath('trace/assets/bundle.js')}></script>
 </Base>
+<script>
+  import { mountFigures } from '../lib/resume-figures';
+  mountFigures();
+</script>
