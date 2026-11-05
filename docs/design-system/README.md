@@ -19,7 +19,7 @@
 
 站点正式页面是静态 Astro，直接使用 `tr-*` 类名。`public/trace/` 下的页面范例运行原版 `window.Trace` bundle，并自带 React 18.3.1（站点其余部分用 React 19）。
 
-`ProfilePage` 是占位模板，内容不是真实经历，页面顶部有说明。换成真实内容前不要把它链接到「关于」。
+`ProfilePage` 占位模板不发布；真实简历是 `/resume/`，内容在 `src/lib/resume.ts`，已脱敏。
 
 品牌手册、令牌、组件指南和组件预览只保留在 `docs/`，不发布到站点；范例从文章页进入。
 

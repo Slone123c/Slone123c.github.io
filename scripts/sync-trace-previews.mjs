@@ -10,7 +10,6 @@ const banners = {
   HomePage: 'Trace 主页范例：文章卡片为示例，尚未链接到真实文章。',
   ArticlePage: 'Trace 文章范例：一篇完整版式的节选，不是本站正式文章。',
   SystemPage: 'Trace 系统剖析范例：国际主义网格版式的节选，不是本站正式文章。',
-  ProfilePage: 'Trace 个人页模板：姓名、履历、项目和数字全是占位内容，不是任何人的真实经历。',
 };
 const responsive = `<style>
 .site-note{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 16px;background:var(--ink);color:var(--bg);font:12px/20px var(--font-mono)}

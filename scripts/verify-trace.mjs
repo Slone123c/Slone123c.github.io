@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 const origin = process.env.VERIFY_URL || 'http://localhost:4321/';
-const names = ['HomePage','ArticlePage','SystemPage','ProfilePage'];
+const names = ['HomePage','ArticlePage','SystemPage'];
 const browser = await chromium.launch();
 try {
   for (const width of [1280, 390]) {
@@ -21,7 +21,11 @@ try {
     }
     assert.equal((await page.request.get(new URL('design/', origin).href)).status(), 404);
     await page.goto(new URL('blog/', origin).href);
-    assert.equal(await page.locator('a[href$="trace/preview/ProfilePage.html"]').count(), 1);
+    assert.equal((await page.request.get(new URL('trace/preview/ProfilePage.html', origin).href)).status(), 404);
+    await page.goto(new URL('resume/', origin).href);
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `overflow resume @${width}`);
+    const text = await page.locator('body').innerText();
+    assert.ok(!/1\d{10}|[\w.-]+@[\w.-]+|【|期望薪资/.test(text), 'resume must not contain contact details or draft markers');
   }
   console.log('trace pass');
 } finally { await browser.close(); }
