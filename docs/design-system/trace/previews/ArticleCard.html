@@ -1,0 +1,16 @@
+<!-- @dsCard group="Content" height=260 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>ArticleCard — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'var(--space-6)'}},
+  h(T.ArticleCard,{no:17,kicker:'Data Structure',href:'#',title:'Go map：一次查找到底经过了什么',summary:'从 hash 到 bucket 到 tophash，看懂 8 个槽位与 6.5 的负载因子是怎么来的。',tags:[{label:'Go 源码',tone:'signal'},'哈希表'],meta:['2026-10-12','18 min']}),
+  h(T.ArticleCard,{no:21,kicker:'Distributed',href:'#',title:'Raft 选主：为什么随机超时就够了',summary:'用 5 个节点的单步模拟，看 term 如何递增、选票如何分裂又收敛。',tags:[{label:'distributed',tone:'cobalt'},{label:'硬核',tone:'amber'}],meta:['2026-09-30','25 min']}))
+  );
+</script>
+</body>
+</html>

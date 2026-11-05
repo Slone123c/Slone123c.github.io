@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>Outline — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{style:{maxWidth:280}}, h(T.Outline,{active:'grow',items:[
+  {id:'why',title:'为什么需要哈希表'},{id:'struct',title:'hmap 与 bmap 的结构'},{id:'tophash',title:'tophash 的作用',level:2},
+  {id:'grow',title:'渐进式扩容',level:2},{id:'swiss',title:'走向 Swiss Table'}]}))
+  );
+</script>
+</body>
+</html>

@@ -13,9 +13,13 @@
 | `tokens.json` | `docs/design-system/trace/tokens.json` | 令牌唯一来源 |
 | 生成的 CSS 变量 | `src/styles/trace-tokens.css` | `npm run sync:trace` 生成，不手改 |
 | `components/bundle.css` | `src/styles/trace-bundle.css` | 原样复制，不手改 |
+| `components/bundle.js`、`*/preview.html` | `trace/components/bundle.js`、`trace/previews/` | 原样复制 |
+| 可打开的预览页 | `public/trace/` | `npm run sync:trace` 生成，不手改 |
 | 页面骨架 | `src/styles/global.css` | 只放 Trace 组件之外的版面 |
 
-站点是静态 Astro，没有引入 `window.Trace` 的 React bundle；页面直接使用 `tr-*` 类名和相同的 DOM 结构。
+站点正式页面是静态 Astro，直接使用 `tr-*` 类名。`/design/` 和 `public/trace/` 下的预览页运行原版 `window.Trace` bundle，并自带 React 18.3.1（站点其余部分用 React 19）。
+
+`ProfilePage` 是占位模板，内容不是真实经历，页面顶部有说明。换成真实内容前不要把它链接到「关于」。
 
 ## 尚未迁移
 

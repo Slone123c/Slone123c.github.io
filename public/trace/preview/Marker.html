@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>Marker — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'tr-prose'},
+  h('p',null,'先用哈希值的低 B 位定位桶 ',h(T.Marker,{n:1}),'，再用高 8 位 ',h('code',null,'tophash'),' 快速比对 ',h(T.Marker,{n:2}),'，最后才比较完整的 key ',h(T.Marker,{n:3,tone:'ink'}),'。'))
+  );
+</script>
+</body>
+</html>

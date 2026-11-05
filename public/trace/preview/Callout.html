@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>Callout — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'tr-stack',style:{maxWidth:680}},
+  h(T.Callout,{kind:'definition',title:'负载因子'},'元素个数 / 桶数量。Go map 在它超过 6.5 时触发扩容。'),
+  h(T.Callout,{kind:'invariant',title:'Log Matching'},'如果两份日志在同一 index 处的 term 相同，那么它们在该 index 之前的所有条目都相同。'),
+  h(T.Callout,{kind:'insight',title:'扩容不是一次搬完的'},'每次写操作顺手搬 1–2 个旧桶，把 O(n) 的停顿摊平成无数个 O(1)。'),
+  h(T.Callout,{kind:'pitfall',title:'遍历顺序不可依赖'},'Go 刻意随机化 range 的起点；依赖顺序的测试迟早会失败。'),
+  h(T.Callout,{kind:'note'},'Go 1.24 起默认实现换成了 Swiss Table，本文前半部分讨论的是 1.23 及以前。'))
+  );
+</script>
+</body>
+</html>

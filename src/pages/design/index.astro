@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import { sitePath } from '../../lib/path';
+import { Content as Book } from '../../../docs/design-system/trace/README.md';
+import tokens from '../../../docs/design-system/trace/tokens.json';
+
+const guides = import.meta.glob<any>('../../../docs/design-system/trace/components/*.md', { eager: true });
+const guide = (name: string) => guides[`../../../docs/design-system/trace/components/${name}.md`].Content;
+const groups: [string, string[]][] = [
+  ['Actions', ['Button']],
+  ['Labels', ['Tag', 'Marker']],
+  ['Content', ['ArticleCard', 'Outline']],
+  ['Explain', ['Callout', 'SpecSheet', 'MathBlock', 'Compare']],
+  ['Code', ['CodeBlock']],
+  ['Visualize', ['Cells', 'Stepper', 'Figure', 'Diagram']],
+];
+const pages = [
+  ['HomePage', '主页', 'Hero、栏目与文章网格。'],
+  ['ArticlePage', '文章页', '一篇源码剖析文章的完整版式。'],
+  ['SystemPage', '系统剖析页', '国际主义网格版式。'],
+  ['ProfilePage', '个人页模板', '30 秒速览 / 完整版，内容全部为占位。'],
+];
+const preview = (name: string) => sitePath(`trace/preview/${name}.html`);
+---
+<Base title="Trace 设计系统" description="Trace：为讲清楚底层原理而生的界面语言。品牌手册、设计令牌、组件与页面范例。">
+  <p class="eyebrow">Design System</p>
+  <h1>Trace</h1>
+  <p class="intro">本站使用的界面语言：品牌手册、设计令牌、组件和页面范例。组件示例中的数字和代码用于演示版式。</p>
+  <iframe class="ds-frame ds-cover" src={preview('Cover')} title="Trace 封面" scrolling="no"></iframe>
+
+  <div class="sec-head sec-gap"><h2>页面范例</h2></div>
+  <div class="card-grid">
+    {pages.map(([id, title, text]) => <a class="tr-card tr-card--link" href={preview(id)}><div class="tr-card__top"><span class="tr-card__kicker">{id}</span></div><h3 class="tr-card__title">{title}</h3><p class="tr-card__summary">{text}</p></a>)}
+  </div>
+
+  <div class="sec-gap tr-prose ds-book"><Book /></div>
+
+  <div class="sec-head sec-gap"><h2>颜色令牌</h2></div>
+  <ul class="ds-swatches">
+    {tokens.color.tokens.map(t => <li title={t.usage}><i style={`background:var(--${t.name})`}></i><div>{t.name}<span>{typeof t.value === 'string' ? t.value : `${t.value.light} / ${t.value.dark}`}</span></div></li>)}
+  </ul>
+
+  <div class="sec-head sec-gap"><h2>字体样式</h2></div>
+  {tokens.type.groups.map(g => g.styles.map(s => (
+    <div class="ds-type">
+      <div class="tr-kicker">{g.name} · {s.name} · {s.fontSize}/{s.lineHeight}</div>
+      <p style={`margin:8px 0 24px;font-family:var(--font-${g.family});font-size:${s.fontSize};line-height:${s.lineHeight};font-weight:${s.fontWeight};${'fontStyle' in s ? `font-style:${s.fontStyle};` : ''}`}>{s.sample}</p>
+    </div>
+  )))}
+
+  <div class="sec-head sec-gap"><h2>组件</h2></div>
+  {groups.map(([group, names]) => (
+    <section>
+      <div class="tr-kicker ds-item">{group}</div>
+      {names.map(name => { const Guide = guide(name); return (
+        <div class="ds-item" id={name}>
+          <div class="tr-prose"><Guide /></div>
+          <iframe class="ds-frame" data-autosize src={preview(name)} title={`${name} 预览`} loading="lazy"></iframe>
+        </div>
+      ); })}
+    </section>
+  ))}
+</Base>
+<script>
+  for (const frame of document.querySelectorAll<HTMLIFrameElement>('[data-autosize]')) {
+    const fit = () => {
+      const doc = frame.contentDocument;
+      if (doc) frame.style.height = `${doc.documentElement.scrollHeight + 2}px`;
+    };
+    frame.addEventListener('load', () => {
+      fit();
+      const doc = frame.contentDocument;
+      if (doc) new ResizeObserver(fit).observe(doc.body);
+    });
+  }
+</script>

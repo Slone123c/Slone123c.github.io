@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>MathBlock — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'tr-stack',style:{maxWidth:680}},
+  h(T.MathBlock,{label:1,note:'归并排序：拆成两半各自排序，再线性合并。'},'T(n) = 2T(n/2) + O(n)  ⇒  T(n) = O(n log n)'),
+  h('p',{className:'tr-prose',style:{margin:0}},'其中 ',h('span',{className:'tr-var'},'n'),' 是元素个数，递归树深度为 ',h('span',{className:'tr-var'},'log n'),'，每层合并的总代价是 ',h('span',{className:'tr-var'},'n'),'。'))
+  );
+</script>
+</body>
+</html>

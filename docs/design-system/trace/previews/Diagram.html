@@ -1,0 +1,42 @@
+<!-- @dsCard group="Visualize" height=690 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>Diagram — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  var graph = {
+    cols: 44, rows: 21,
+    groups: [{ x: 10, y: 1, w: 22, h: 20, label: 'CONTROL PLANE' }, { x: 34, y: 1, w: 10, h: 20, label: 'WORKER NODE' }],
+    nodes: [
+      { id: 'cli', x: 0, y: 9, w: 8, h: 3, label: 'kubectl', kind: 'external' },
+      { id: 'api', x: 12, y: 9, w: 9, h: 3, label: 'apiserver', sub: ':6443', n: 1 },
+      { id: 'etcd', x: 12, y: 16, w: 9, h: 3, label: 'etcd', sub: 'raft × 3', n: 2, kind: 'store' },
+      { id: 'sch', x: 23, y: 4, w: 8, h: 3, label: 'scheduler', n: 3 },
+      { id: 'cm', x: 23, y: 16, w: 8, h: 3, label: 'controller', n: 4 },
+      { id: 'kubelet', x: 35, y: 6, w: 8, h: 3, label: 'kubelet', n: 5 },
+      { id: 'cri', x: 35, y: 14, w: 8, h: 3, label: 'containerd', kind: 'muted' }],
+    edges: [
+      { from: 'cli', to: 'api', label: 'REST' },
+      { from: 'api', to: 'etcd', label: 'write', kind: 'ref', both: true },
+      { from: 'sch', to: 'api', label: 'watch', fromSide: 'left', toSide: 'top', toAt: 0.7 },
+      { from: 'cm', to: 'api', label: 'watch', fromSide: 'top', fromAt: 0.3, toSide: 'right', toAt: 0.75 },
+      { from: 'api', to: 'kubelet', label: 'pod spec', mid: 33, fromAt: 0.25 },
+      { from: 'kubelet', to: 'cri', label: 'CRI' }]
+  };
+  var steps = [
+    { title: 'kubectl 把 Deployment 发给 apiserver', desc: '一次普通的 REST 请求，先过认证、鉴权和准入控制。', lit: { nodes: ['cli', 'api'], edges: [0] } },
+    { title: 'apiserver 把对象写进 etcd', desc: '写成功就返回。此刻还没有任何 Pod 被创建。', lit: { nodes: ['api', 'etcd'], edges: [1] } },
+    { title: 'controller 看到新 Deployment，创建 Pod 对象', desc: '它通过 watch 得知变化，再把 Pod 写回 apiserver。', lit: { nodes: ['cm', 'api'], edges: [3] } },
+    { title: 'scheduler 给 Pod 选一个节点', desc: '只做决定：把 nodeName 写回 apiserver，不碰容器。', lit: { nodes: ['sch', 'api'], edges: [2] } },
+    { title: 'kubelet 拉起容器', desc: 'kubelet watch 到分给自己的 Pod，通过 CRI 让 containerd 启动它。', lit: { nodes: ['kubelet', 'cri'], edges: [4, 5] } }];
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { style: { maxWidth: 820 } }, h(T.Stepper, {
+      steps: steps, initial: 2,
+      renderStage: function (i) { return h(T.Diagram, Object.assign({ guides: false, highlight: steps[i].lit }, graph)); }
+    }))
+  );
+</script>
+</body>
+</html>

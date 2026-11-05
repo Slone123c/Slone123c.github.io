@@ -1,0 +1,25 @@
+<!-- @dsCard group="Explain" height=600 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>Compare — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    h('div', { style: { maxWidth: 860 } }, h(T.Compare, {
+      kicker: 'Compare · 存储引擎索引', title: '三种索引结构的取舍', focus: 1,
+      options: [{ name: 'B+Tree', sub: 'MySQL InnoDB' }, { name: 'LSM-Tree', sub: 'RocksDB · LevelDB' }, { name: 'Hash', sub: 'Redis dict' }],
+      rows: [
+        { k: '点查', values: [{ v: 'O(log n)', verdict: 'neutral' }, { v: 'O(log n) + 布隆过滤', verdict: 'neutral' }, { v: 'O(1)', verdict: 'good' }] },
+        { k: '范围查询', values: [{ v: '叶子链表顺序扫', verdict: 'good' }, { v: '多层归并', verdict: 'neutral' }, { v: '不支持', verdict: 'bad' }] },
+        { k: '写入', note: '随机写 vs 顺序写', values: [{ v: '原地更新、页分裂', verdict: 'neutral' }, { v: '顺序追加 memtable', verdict: 'good' }, { v: '原地 O(1)', verdict: 'good' }] },
+        { k: '读放大', values: [{ v: '一条根到叶路径', verdict: 'good' }, { v: '可能查多层 SST', verdict: 'bad' }, { v: '一次定位', verdict: 'good' }] },
+        { k: '后台代价', values: [{ v: '页合并', verdict: 'neutral' }, { v: 'compaction 写放大', verdict: 'bad' }, { v: '渐进 rehash', verdict: 'neutral' }] }],
+      summary: '写多读少、能接受后台 compaction，选 LSM；需要范围查询和稳定的读延迟，B+Tree 仍然是默认答案。',
+      footer: '前提：单机、数据大于内存（Hash 一列除外）。'
+    }))
+  );
+</script>
+</body>
+</html>

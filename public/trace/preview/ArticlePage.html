@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>ArticlePage — showcase</title>
+<style>
+  .pg { display: grid; grid-template-columns: minmax(0, 680px) 220px; gap: var(--space-8); justify-content: center; padding: var(--space-7) var(--space-6); }
+  .pg h1 { margin: var(--space-3) 0 var(--space-4); font-family: var(--font-display); font-size: 56px; line-height: 60px; font-weight: 750; letter-spacing: -0.03em; }
+  .pg h1 em { font-style: normal; background: var(--mark); color: var(--on-mark); padding: 0 6px; border-radius: var(--radius-xs); }
+  .pg .lead { font-size: 19px; line-height: 32px; color: var(--ink-muted); margin: 0 0 var(--space-4); }
+  .pg .meta { display: flex; gap: var(--space-4); align-items: center; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12px; color: var(--ink-subtle); padding-bottom: var(--space-5); border-bottom: 1.5px solid var(--line); margin-bottom: var(--space-6); }
+  .pg h2 { display: flex; gap: var(--space-3); align-items: baseline; margin: var(--space-7) 0 var(--space-4); font-family: var(--font-display); font-size: 26px; line-height: 34px; font-weight: 700; letter-spacing: -0.01em; }
+  .pg h2 .no { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--signal-text); }
+  .pg .block { margin: var(--space-5) 0; }
+  .pg aside.side { position: sticky; top: var(--space-6); align-self: start; display: grid; gap: var(--space-6); }
+  .series { font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+  .series b { display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--ink-subtle); margin-bottom: var(--space-2); }
+  .series ol { margin: 0; padding-left: 18px; } .series li.on { color: var(--ink); font-weight: 600; }
+</style><style>
+.site-note{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 16px;background:var(--ink);color:var(--bg);font:12px/20px var(--font-mono)}
+.site-note a{color:inherit}
+@media(max-width:1000px){.pg{grid-template-columns:minmax(0,1fr)!important;gap:0!important}.pg aside.side{display:none}.home .hero{grid-template-columns:minmax(0,1fr)!important}.home .grid{grid-template-columns:minmax(0,1fr)!important}.sw .hero-num,.sw .hero-txt,.sw .sec-h,.sw .sec-b{grid-column:1/-1!important}.sw .sec-b{border-top:0}.sw .hero-num{font-size:120px;line-height:100px}}
+@media(max-width:560px){.pg,.home,.sw{padding-left:16px!important;padding-right:16px!important}.pf{padding-left:16px;padding-right:16px}.pg h1,.sw h1,.home .hero h1{font-size:38px!important;line-height:44px!important}.sw .info div{grid-column:span 6;margin-bottom:8px}.nav nav a{margin-left:12px!important}}
+</style></head>
+<body><div class="site-note"><span>Trace 文章范例：一篇完整版式的节选，不是本站正式文章。</span><a href="../../design/">← Trace 设计系统</a></div>
+<div id="root"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  var code = [
+    'b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.BucketSize)))',
+    'top := tophash(hash)',
+    'for ; b != nil; b = b.overflow(t) {',
+    '\tfor i := uintptr(0); i < bucketCnt; i++ {',
+    '\t\tif b.tophash[i] != top { continue }',
+    '\t\t// ... 比较完整 key，命中则返回',
+    '\t}',
+    '}'].join('\n');
+  function Page() {
+    return h('div', { className: 'pg' },
+      h('main', { className: 'tr-prose' },
+        h('div', { className: 'tr-kicker' }, 'Data Structure · No.017'),
+        h('h1', null, 'Go map：一次查找', h('br'), '到底经过了', h('em', null, '什么')),
+        h('p', { className: 'lead' }, '从 hash 到 bucket 到 tophash——看懂 8 个槽位和 6.5 的负载因子是怎么来的，以及 Go 1.24 为什么换成了 Swiss Table。'),
+        h('div', { className: 'meta' }, h('span', null, '2026-10-12'), h('span', null, '18 min'), h('span', null, 'Go 1.23 源码'), h(T.Tag, { tone: 'signal' }, 'Go 源码'), h(T.Tag, { tone: 'amber' }, '进阶')),
+        h('div', { className: 'block' }, h(T.SpecSheet, { title: 'runtime.hmap · Go 1.23', rows: [
+          { k: '查找 · 平均', v: 'O(1)', tone: 'green', note: 'tophash 先过滤' },
+          { k: '查找 · 最坏', v: 'O(n)', tone: 'amber', note: '溢出桶链过长' },
+          { k: '桶容量', v: '8', note: 'bucketCnt' },
+          { k: '负载因子', v: '6.5', tone: 'signal', note: '超过即扩容' }] })),
+        h('h2', { id: 'struct' }, h('span', { className: 'no' }, '02'), 'hmap 与 bmap 的结构'),
+        h('p', null, '一个 map 由 ', h('code', null, 'hmap'), ' 头部和 2', h('sup', null, 'B'), ' 个桶组成。查找时先用 hash 的低 B 位选桶 ', h(T.Marker, { n: 1 }), '，再用高 8 位作为 ', h('code', null, 'tophash'), ' 在桶内快速比对 ', h(T.Marker, { n: 2 }), '。'),
+        h('div', { className: 'block' }, h(T.CodeBlock, { filename: 'runtime/map.go', lang: 'go', start: 415, highlight: [415, 419], notes: { 415: 1, 419: 2 }, code: code })),
+        h('div', { className: 'block' }, h(T.Callout, { kind: 'insight', title: '为什么要 tophash？' }, '比较 1 个字节远比比较整把 key 便宜。8 个 tophash 挤在一起，一次缓存行加载就能过滤掉绝大多数槽位。')),
+        h('div', { className: 'block' }, h(T.Figure, { n: 2, caption: '查找命中 bucket[3] 的第 3 个槽位。' },
+          h(T.Cells, { label: 'bucket[3].tophash', cells: [{ v: '0x5c', state: 'dead' }, { v: '0xa1', state: 'dead' }, { v: '0x07', state: 'dead' }, { v: '0xe3', state: 'hit', tag: 'top' }, { v: '', state: 'empty' }, { v: '', state: 'empty' }, { v: '', state: 'empty' }, { v: '', state: 'empty' }] }))),
+        h('h2', { id: 'grow' }, h('span', { className: 'no' }, '03'), '渐进式扩容'),
+        h('p', null, '当元素数超过 ', h('span', { className: 'tr-var' }, '6.5 · 2', h('sup', null, 'B')), ' 时触发扩容。', h('mark', null, '迁移不是一次完成的'), '，而是摊到之后的每一次写操作里。'),
+        h('div', { className: 'block' }, h(T.MathBlock, { label: 1, note: '平均每个桶 6.5 个元素：空间利用率与溢出概率的折中。' }, 'count > 6.5 × 2', h('sup', null, 'B'))),
+        h('div', { className: 'block' }, h(T.Callout, { kind: 'pitfall', title: '并发写会直接 panic' }, 'map 不是并发安全的；运行时检测到并发写会抛出 fatal error，而不是返回错误。'))
+      ),
+      h('aside', { className: 'side' },
+        h(T.Outline, { active: 'grow', items: [{ id: 'why', title: '为什么需要哈希表' }, { id: 'struct', title: 'hmap 与 bmap 的结构' }, { id: 'tophash', title: 'tophash 的作用', level: 2 }, { id: 'grow', title: '渐进式扩容' }, { id: 'swiss', title: '走向 Swiss Table' }] }),
+        h('div', { className: 'series' }, h('b', null, 'SERIES · GO MAP 三部曲'), h('ol', null, h('li', { className: 'on' }, '一次查找经过了什么'), h('li', null, '扩容与迁移'), h('li', null, 'Swiss Table 与 SIMD'))))
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Page));
+</script>
+</body>
+</html>

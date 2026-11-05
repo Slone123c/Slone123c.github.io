@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>SystemPage — showcase</title>
+<style>
+  .sw { max-width: 1040px; margin: 0 auto; padding: var(--space-7) var(--space-6); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-5); }
+  .sw > * { min-width: 0; }
+  .full { grid-column: 1 / -1; }
+  .info { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-5); border-top: 3px solid var(--ink); padding-top: var(--space-3); font-family: var(--font-mono); font-size: 12px; line-height: 18px; }
+  .info div { grid-column: span 3; } .info b { display: block; color: var(--ink-subtle); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 11px; }
+  .info .brand { color: var(--signal-text); font-weight: 700; }
+  .hero-num { grid-column: 1 / span 4; font-family: var(--font-display); font-size: 220px; line-height: 180px; font-weight: 750; letter-spacing: -0.06em; color: var(--signal); margin-top: var(--space-6); }
+  .hero-txt { grid-column: 5 / -1; margin-top: var(--space-6); align-self: end; }
+  .hero-txt h1 { margin: var(--space-2) 0 var(--space-4); font-family: var(--font-display); font-size: 56px; line-height: 60px; font-weight: 750; letter-spacing: -0.03em; }
+  .hero-txt p { margin: 0; font-size: 19px; line-height: 32px; color: var(--ink-muted); max-width: 560px; }
+  .sec { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; margin-top: var(--space-8); }
+  .sec-h { grid-column: 1 / span 3; border-top: 3px solid var(--ink); padding-top: var(--space-3); }
+  .sec-h .n { font-family: var(--font-display); font-size: 44px; line-height: 44px; font-weight: 750; letter-spacing: -0.04em; }
+  .sec-h h2 { margin: var(--space-2) 0 0; font-family: var(--font-display); font-size: 20px; line-height: 28px; font-weight: 700; }
+  .sec-b { grid-column: 4 / -1; border-top: 1px solid var(--line); padding-top: var(--space-3); }
+  .sec-b > p { margin: 0 0 var(--space-5); max-width: 640px; }
+</style><style>
+.site-note{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 16px;background:var(--ink);color:var(--bg);font:12px/20px var(--font-mono)}
+.site-note a{color:inherit}
+@media(max-width:1000px){.pg{grid-template-columns:minmax(0,1fr)!important;gap:0!important}.pg aside.side{display:none}.home .hero{grid-template-columns:minmax(0,1fr)!important}.home .grid{grid-template-columns:minmax(0,1fr)!important}.sw .hero-num,.sw .hero-txt,.sw .sec-h,.sw .sec-b{grid-column:1/-1!important}.sw .sec-b{border-top:0}.sw .hero-num{font-size:120px;line-height:100px}}
+@media(max-width:560px){.pg,.home,.sw{padding-left:16px!important;padding-right:16px!important}.pf{padding-left:16px;padding-right:16px}.pg h1,.sw h1,.home .hero h1{font-size:38px!important;line-height:44px!important}.sw .info div{grid-column:span 6;margin-bottom:8px}.nav nav a{margin-left:12px!important}}
+</style></head>
+<body><div class="site-note"><span>Trace 系统剖析范例：国际主义网格版式的节选，不是本站正式文章。</span><a href="../../design/">← Trace 设计系统</a></div>
+<div id="root"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  function Page() {
+    return h('div', { className: 'sw' },
+      h('div', { className: 'info' },
+        h('div', null, h('b', null, 'Series'), h('span', { className: 'brand' }, 'SYSTEMS / 04')),
+        h('div', null, h('b', null, 'Subject'), 'Kubernetes v1.31'),
+        h('div', null, h('b', null, 'Published'), '2026-10-29'),
+        h('div', null, h('b', null, 'Reading'), '22 min · 进阶')),
+      h('div', { className: 'hero-num', 'aria-hidden': 'true' }, '04'),
+      h('div', { className: 'hero-txt' },
+        h('div', { className: 'tr-kicker' }, 'Systems · Kubernetes'),
+        h('h1', null, '一切都经过 apiserver'),
+        h('p', null, 'Kubernetes 的控制面是一组互不直接通信的控制循环。理解了「谁 watch 谁」，你就理解了它的全部。')),
+      h('section', { className: 'sec' },
+        h('div', { className: 'sec-h' }, h('div', { className: 'n' }, '01'), h('h2', null, '组件拓扑')),
+        h('div', { className: 'sec-b tr-prose', style: { maxWidth: 'none' } },
+          h('p', null, '只有 kube-apiserver ', h(T.Marker, { n: 1 }), ' 能读写 etcd ', h(T.Marker, { n: 2 }), '。scheduler ', h(T.Marker, { n: 3 }), ' 和 controller-manager ', h(T.Marker, { n: 4 }), ' 都通过 watch 拿到变化，再把决定写回 apiserver。'),
+          h(T.Diagram, {
+            variant: 'swiss', cols: 30, rows: 13, n: 1, caption: '控制面与一个工作节点。橙色是 kubectl apply 的请求路径。',
+            groups: [{ x: 6, y: 0, w: 15, h: 13, label: 'CONTROL PLANE' }, { x: 22, y: 0, w: 8, h: 13, label: 'WORKER NODE' }],
+            nodes: [
+              { id: 'cli', x: 0, y: 5, w: 4, h: 2, label: 'kubectl', kind: 'external' },
+              { id: 'api', x: 7, y: 5, w: 6, h: 2, label: 'apiserver', n: 1, kind: 'active' },
+              { id: 'etcd', x: 7, y: 10, w: 6, h: 2, label: 'etcd', sub: 'raft × 3', n: 2, kind: 'store' },
+              { id: 'sch', x: 14, y: 2, w: 6, h: 2, label: 'scheduler', n: 3 },
+              { id: 'cm', x: 14, y: 8, w: 6, h: 2, label: 'controller', n: 4 },
+              { id: 'kubelet', x: 23, y: 3, w: 6, h: 2, label: 'kubelet', n: 5 },
+              { id: 'cri', x: 23, y: 9, w: 6, h: 2, label: 'containerd', kind: 'muted' }],
+            edges: [
+              { from: 'cli', to: 'api', label: 'REST', kind: 'active' },
+              { from: 'api', to: 'etcd', label: 'write', kind: 'ref', both: true },
+              { from: 'sch', to: 'api', label: 'watch', fromSide: 'left', toSide: 'top', toAt: 0.7 },
+              { from: 'cm', to: 'api', label: 'watch', axis: 'h', mid: 13.5, toAt: 0.75 },
+              { from: 'api', to: 'kubelet', label: 'pod', mid: 21.5, fromAt: 0.25 },
+              { from: 'kubelet', to: 'cri', label: 'CRI' }]
+          }))),
+      h('section', { className: 'sec' },
+        h('div', { className: 'sec-h' }, h('div', { className: 'n' }, '02'), h('h2', null, '为什么不让组件直连')),
+        h('div', { className: 'sec-b' },
+          h(T.Compare, {
+            variant: 'swiss', focus: 0, corner: '架构', focusLabel: 'K8s 的选择',
+            options: [{ name: '星型 · 经 apiserver', sub: 'hub-and-spoke' }, { name: '组件直连', sub: 'peer-to-peer' }],
+            rows: [
+              { k: '一致性', values: [{ v: '单一事实来源 etcd', verdict: 'good' }, { v: '各自缓存，易分叉', verdict: 'bad' }] },
+              { k: '鉴权与审计', values: [{ v: '集中在一处', verdict: 'good' }, { v: '每条连线都要做', verdict: 'bad' }] },
+              { k: '延迟', values: [{ v: '多一跳', verdict: 'neutral' }, { v: '最短路径', verdict: 'good' }] },
+              { k: '扩展新组件', values: [{ v: '只需会 watch', verdict: 'good' }, { v: '要认识所有邻居', verdict: 'bad' }] }]
+          }),
+          h('div', { style: { marginTop: 'var(--space-5)' } }, h(T.Callout, { kind: 'invariant', title: 'Level-triggered' }, '控制器比较「期望状态」与「当前状态」，而不是响应单个事件；丢掉一次通知也不会出错。'))))
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Page));
+</script>
+</body>
+</html>

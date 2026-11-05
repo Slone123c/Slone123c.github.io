@@ -1,0 +1,28 @@
+<!-- @dsCard group="Visualize" height=440 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>Stepper — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+(function(){
+  var data=[
+    {t:'计算 hash，取低 B 位定位桶',d:'B = 3，共 8 个桶；hash & 0b111 = 3，进入 bucket[3]。',a:-1},
+    {t:'取高 8 位作为 tophash',d:'top = 0xe3。先比较 1 字节，而不是整把 key。',a:0},
+    {t:'逐槽比较 tophash',d:'槽 0、1、2 不相等，直接跳过，不触碰 key 内存。',a:2},
+    {t:'命中：tophash 相等，再比较完整 key',d:'槽 3 匹配，key 相同，返回对应 value。',a:3,hit:true}];
+  var top=['0x5c','0xa1','0x07','0xe3','','','',''];
+  return h('div',{style:{maxWidth:680}},h(T.Stepper,{steps:data.map(function(s){return {title:s.t,desc:s.d}}),initial:2,renderStage:function(i){
+    var s=data[i];
+    return h(T.Cells,{label:'bucket[3].tophash',cells:top.map(function(v,j){
+      var st=v===''?'empty':'default';
+      if(j<s.a&&v!=='')st='dead';
+      if(j===s.a)st=s.hit?'hit':'active';
+      return {v:v,state:st,tag:j===s.a?'i':''};})});}}));
+})()
+  );
+</script>
+</body>
+</html>

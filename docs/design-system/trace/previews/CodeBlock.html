@@ -1,0 +1,27 @@
+<!-- @dsCard group="Code" height=400 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>CodeBlock — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{style:{maxWidth:680}}, h(T.CodeBlock,{filename:'runtime/map.go',lang:'go',start:412,highlight:[416,419],notes:{414:1,416:2,419:3},code:[
+'func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {',
+'\thash := t.Hasher(key, uintptr(h.hash0))',
+'\tm := bucketMask(h.B)',
+'\tb := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.BucketSize)))',
+'\ttop := tophash(hash)',
+'\tfor ; b != nil; b = b.overflow(t) {',
+'\t\tfor i := uintptr(0); i < bucketCnt; i++ {',
+'\t\t\tif b.tophash[i] != top { continue } // 快速过滤',
+'\t\t\t// ... 比较完整 key',
+'\t\t}',
+'\t}',
+'\treturn unsafe.Pointer(&zeroVal[0])',
+'}'].join('\n')}))
+  );
+</script>
+</body>
+</html>

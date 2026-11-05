@@ -1,0 +1,49 @@
+<!-- @dsCard group="Pages" height=990 width=1120 page subtitle="个人主页：Hero + 栏目 + 文章网格" -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>HomePage — showcase</title>
+<style>
+  .home { max-width: 1040px; margin: 0 auto; padding: var(--space-6); }
+  .nav { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 13px; padding-bottom: var(--space-5); border-bottom: 1.5px solid var(--line); }
+  .nav .who { font-family: var(--font-display); font-size: 20px; font-weight: 750; letter-spacing: -0.02em; }
+  .nav .who i { font-style: normal; display: inline-block; width: 10px; height: 10px; background: var(--signal); border-radius: 2px; margin-right: 8px; }
+  .nav a { color: var(--ink-muted); text-decoration: none; margin-left: var(--space-5); } .nav a.on { color: var(--ink); font-weight: 700; }
+  .hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--space-7); align-items: end; padding: var(--space-8) 0 var(--space-7); }
+  .hero h1 { margin: var(--space-3) 0 var(--space-4); font-family: var(--font-display); font-size: 64px; line-height: 64px; font-weight: 750; letter-spacing: -0.035em; }
+  .hero h1 span { color: var(--signal-text); }
+  .hero p { margin: 0 0 var(--space-5); font-size: 19px; line-height: 32px; color: var(--ink-muted); max-width: 520px; }
+  .shelf { display: flex; gap: var(--space-2); flex-wrap: wrap; margin: 0 0 var(--space-5); }
+  .sec { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 var(--space-5); }
+  .sec h2 { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 34px; font-weight: 700; }
+  .sec a { font-family: var(--font-mono); font-size: 13px; color: var(--link); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+</style></head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  function Home() {
+    return h('div', { className: 'home' },
+      h('header', { className: 'nav' }, h('span', { className: 'who' }, h('i'), 'yourname.dev'),
+        h('nav', null, h('a', { href: '#', className: 'on' }, '文章'), h('a', { href: '#' }, '系列'), h('a', { href: '#' }, '笔记'), h('a', { href: '#' }, '关于'))),
+      h('section', { className: 'hero' },
+        h('div', null,
+          h('div', { className: 'tr-kicker' }, 'Engineering Notebook'),
+          h('h1', null, '把底层原理', h('br'), '讲到', h('span', null, '看得见'), '。'),
+          h('p', null, '数据结构、分布式协议、大型系统源码和数学——每篇都带可单步执行的图示，和能对上源码行号的解释。'),
+          h('div', { className: 'tr-row' }, h(T.Button, { variant: 'primary' }, '从 Raft 开始 →'), h(T.Button, null, '全部文章'))),
+        h(T.Stepper, { initial: 1, steps: [{ title: 'S1 超时，成为 Candidate', desc: 'term 从 1 增加到 2，给自己投一票。' }, { title: '向其他节点请求投票', desc: '5 个节点中拿到 3 票即为多数。' }, { title: 'S1 当选 Leader', desc: '立即发送心跳，压制其他节点的选举。' }],
+          renderStage: function (i) { var st = [['active', '', '', '', ''], ['active', 'ref', 'ref', '', ''], ['hit', 'ref', 'ref', 'ref', 'ref']][i];
+            return h(T.Cells, { label: 'term = ' + (i === 0 ? 2 : 2) + ' · nodes', showIndex: false, cells: ['S1', 'S2', 'S3', 'S4', 'S5'].map(function (n, j) { return { v: n, state: st[j] || 'default', tag: j === 0 ? ['cand', 'cand', 'leader'][i] : (st[j] === 'ref' ? 'vote' : '') }; }) }); } })),
+      h('div', { className: 'shelf' }, ['数据结构', '算法', '分布式', '数据库', '云原生', '方法论', '数学'].map(function (t, i) { return h(T.Tag, { key: t, tone: i === 2 ? 'signal' : 'neutral' }, t); })),
+      h('div', { className: 'sec' }, h('h2', null, '最近更新'), h('a', { href: '#' }, '归档 →')),
+      h('div', { className: 'grid' },
+        h(T.ArticleCard, { no: 21, kicker: 'Distributed', href: '#', title: 'Raft 选主：为什么随机超时就够了', summary: '5 个节点的单步模拟，看选票如何分裂又收敛。', tags: [{ label: 'distributed', tone: 'cobalt' }], meta: ['09-30', '25 min'] }),
+        h(T.ArticleCard, { no: 17, kicker: 'Data Structure', href: '#', title: 'Go map：一次查找到底经过了什么', summary: '8 个槽位和 6.5 的负载因子是怎么来的。', tags: [{ label: 'Go 源码', tone: 'signal' }], meta: ['10-12', '18 min'] }),
+        h(T.ArticleCard, { no: 14, kicker: 'Math', href: '#', title: '矩阵乘法是在做什么：线性变换的复合', summary: '先变换 B 再变换 A——为什么顺序从右往左读。', tags: [{ label: '线性代数', tone: 'green' }], meta: ['08-21', '12 min'] }))
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Home));
+</script>
+</body>
+</html>

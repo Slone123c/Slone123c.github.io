@@ -1,0 +1,259 @@
+<!-- @dsCard group="Pages" height=3260 width=1120 page subtitle="个人介绍 + 求职：30 秒速览 / 完整版，可直接打印成 A4 简历" -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>ProfilePage — showcase</title>
+<style>
+  .pf { max-width: 1040px; margin: 0 auto; padding: 0 var(--space-6) var(--space-8); }
+  .pf a { color: inherit; }
+
+  /* top bar */
+  .bar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding: var(--space-4) 0; background: var(--bg); border-bottom: 1.5px solid var(--line); }
+  .who { font-family: var(--font-display); font-size: 20px; font-weight: 750; letter-spacing: -0.02em; }
+  .who i { font-style: normal; display: inline-block; width: 10px; height: 10px; background: var(--signal); border-radius: 2px; margin-right: 8px; }
+  .seg { display: inline-flex; padding: 3px; border-radius: var(--radius-full); background: var(--surface-sunken); font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+  .seg button { font: inherit; border: 0; background: transparent; color: var(--ink-muted); padding: 4px 12px; border-radius: var(--radius-full); cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .seg button:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+
+  /* 01 hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--space-7); align-items: center; padding: var(--space-8) 0 var(--space-7); }
+  .status { display: inline-flex; align-items: center; gap: var(--space-2); font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 2px 10px 2px 8px; border-radius: var(--radius-full); background: var(--signal-soft); color: var(--signal-text); }
+  .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
+  .hero h1 { margin: var(--space-4) 0 var(--space-3); font-family: var(--font-display); font-size: 60px; line-height: 64px; font-weight: 750; letter-spacing: -0.035em; }
+  .hero .role { font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: var(--space-4); }
+  .hero .role span { color: var(--ink-subtle); margin: 0 6px; }
+  .hero p.pitch { margin: 0 0 var(--space-5); font-size: 19px; line-height: 32px; color: var(--ink-muted); max-width: 540px; }
+  .hero p.pitch mark { background: var(--mark-soft); color: var(--ink); box-shadow: inset 0 -3px 0 var(--mark); padding: 0 2px; }
+  .links { display: flex; gap: var(--space-4); margin-top: var(--space-4); font-family: var(--font-mono); font-size: 13px; }
+  .links a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+
+  /* grid sections (02–07) */
+  .sec { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-5); margin-top: var(--space-8); }
+  .sec-h { grid-column: 1 / span 3; border-top: 3px solid var(--ink); padding-top: var(--space-3); }
+  .sec-h .n { font-family: var(--font-display); font-size: 44px; line-height: 44px; font-weight: 750; letter-spacing: -0.04em; }
+  .sec-h h2 { margin: var(--space-2) 0 var(--space-1); font-family: var(--font-display); font-size: 20px; line-height: 28px; font-weight: 700; }
+  .sec-h p { margin: 0; font-size: 13px; line-height: 20px; color: var(--ink-muted); }
+  .sec-b { grid-column: 4 / -1; border-top: 1px solid var(--line); padding-top: var(--space-4); min-width: 0; }
+
+  /* 02 skills */
+  .skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+  .lvl { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: .08em; margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2); }
+  .lvl i { display: inline-flex; gap: 2px; } .lvl i b { width: 10px; height: 6px; border-radius: 2px; background: var(--line); } .lvl i b.on { background: var(--ink); }
+  .skill { padding: var(--space-3) 0; border-top: 1px solid var(--line); }
+  .skill strong { display: block; font-size: 15px; line-height: 22px; }
+  .skill a { display: inline-block; margin-top: 2px; font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--link); text-decoration: none; }
+  .skill a:hover { text-decoration: underline; }
+  .skill .none { font-family: var(--font-mono); font-size: 12px; color: var(--ink-subtle); }
+
+  /* 03 projects */
+  .proj { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius-md); padding: var(--space-5); margin-bottom: var(--space-5); }
+  .proj-top { display: flex; justify-content: space-between; gap: var(--space-4); align-items: baseline; flex-wrap: wrap; }
+  .proj h3 { margin: var(--space-2) 0 var(--space-3); font-family: var(--font-display); font-size: 22px; line-height: 30px; font-weight: 700; }
+  .proj .meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-subtle); }
+  .psr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: var(--space-4) 0; }
+  .psr div b { display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--ink-subtle); margin-bottom: var(--space-1); }
+  .psr div { font-size: 14px; line-height: 23px; }
+  .proj .more { margin-top: var(--space-4); }
+  .proj-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+  .proj-row .proj { margin: 0; }
+  .proj-row .proj h3 { font-size: 19px; line-height: 26px; }
+
+  /* 04 timeline */
+  .tl { list-style: none; margin: 0; padding: 0; }
+  .tl li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: var(--space-5); padding: var(--space-4) 0; border-top: 1px solid var(--line); }
+  .tl li:first-child { border-top: 0; padding-top: 0; }
+  .tl .d { font-family: var(--font-mono); font-size: 13px; line-height: 22px; color: var(--ink-subtle); }
+  .tl .d b { color: var(--ink); font-weight: 700; }
+  .tl h4 { margin: 0; font-size: 16px; line-height: 24px; }
+  .tl h4 span { font-weight: 400; color: var(--ink-muted); }
+  .tl p { margin: var(--space-1) 0 0; font-size: 14px; line-height: 23px; color: var(--ink-muted); }
+
+  /* 05 writing */
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+  .learning { margin-top: var(--space-5); display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: var(--surface-sunken); font-size: 14px; }
+  .learning b { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--ink-subtle); white-space: nowrap; }
+  .prog { flex: 1; display: flex; gap: 3px; min-width: 120px; } .prog i { flex: 1; height: 6px; border-radius: 3px; background: var(--line); } .prog i.on { background: var(--ink); } .prog i.now { background: var(--signal); }
+  .learning span.c { font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+
+  /* 06 how I work */
+  .ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+
+  /* 07 contact */
+  .contact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+  .contact div b { display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--ink-subtle); margin-bottom: var(--space-1); }
+  .contact div { font-size: 15px; line-height: 24px; }
+  .contact a { color: var(--link); }
+  .aside { margin-top: var(--space-5); font-size: 14px; color: var(--ink-muted); }
+
+  .quick .full-only { display: none; }
+
+  @media (max-width: 760px) {
+    .hero, .skills, .psr, .proj-row, .cards, .ways, .contact { grid-template-columns: 1fr; }
+    .sec-h, .sec-b { grid-column: 1 / -1; } .sec-b { border-top: 0; }
+    .hero h1 { font-size: 44px; line-height: 48px; }
+    .tl li { grid-template-columns: 1fr; gap: var(--space-1); }
+  }
+  /* print = a one-file resume */
+  @media print {
+    @page { size: A4; margin: 14mm; }
+    body { background: #fff; }
+    .bar .seg, .noprint, .tr-btn { display: none !important; }
+    .bar { position: static; }
+    .pf { padding: 0; }
+    .hero { padding: 16px 0; gap: 24px; }
+    .sec { margin-top: 24px; break-inside: avoid; }
+    .proj { break-inside: avoid; }
+  }
+</style></head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+
+  /* ---- placeholder content: replace with your own ---- */
+  var SKILLS = [
+    { lvl: '深入', bars: 3, items: [
+      { k: 'Go 与 runtime', proof: 'Go map 源码系列 →' },
+      { k: '分布式共识', proof: 'Raft 单步模拟 →' },
+      { k: '边缘网络 / CDN 调度', proof: '项目 01 →' }] },
+    { lvl: '熟练', bars: 2, items: [
+      { k: 'MySQL · Redis', proof: '索引结构对比 →' },
+      { k: 'Kubernetes · Docker', proof: '控制面剖析 →' },
+      { k: 'gRPC · 服务治理', proof: '项目 02 →' }] },
+    { lvl: '了解', bars: 1, items: [
+      { k: 'eBPF', proof: null },
+      { k: 'Rust', proof: null },
+      { k: '嵌入式 / 硬件', proof: '工作之外 →' }] }];
+
+  var flow = {
+    cols: 38, rows: 11,
+    groups: [{ x: 8, y: 1, w: 20, h: 10, label: 'EDGE CONTROL PLANE' }],
+    nodes: [
+      { id: 'u', x: 0, y: 3, w: 6, h: 3, label: '客户配置', kind: 'external' },
+      { id: 'api', x: 9, y: 3, w: 7, h: 3, label: 'config-api', n: 1, kind: 'active' },
+      { id: 'q', x: 20, y: 3, w: 7, h: 3, label: '版本日志', sub: 'etcd', n: 2, kind: 'store' },
+      { id: 'push', x: 20, y: 8, w: 7, h: 3, label: '增量下发', n: 3 },
+      { id: 'edge', x: 31, y: 8, w: 7, h: 3, label: '边缘节点', sub: '× 2,000', kind: 'hit' }],
+    edges: [
+      { from: 'u', to: 'api', label: 'REST', kind: 'active' },
+      { from: 'api', to: 'q', label: 'append', kind: 'ref' },
+      { from: 'q', to: 'push', label: 'watch' },
+      { from: 'push', to: 'edge', label: 'stream', kind: 'active' }]
+  };
+
+  function Sec(p) {
+    return h('section', { className: 'sec' + (p.full ? ' full-only' : ''), id: p.id },
+      h('div', { className: 'sec-h' }, h('div', { className: 'n' }, p.n), h('h2', null, p.title), p.hint && h('p', null, p.hint)),
+      h('div', { className: 'sec-b' }, p.children));
+  }
+
+  function Profile() {
+    var st = React.useState('full'), mode = st[0], setMode = st[1];
+    return h('div', { className: 'pf' + (mode === 'quick' ? ' quick' : '') },
+      h('header', { className: 'bar' },
+        h('span', { className: 'who' }, h('i'), '你的名字'),
+        h('div', { className: 'seg', role: 'group', 'aria-label': '阅读模式' },
+          h('button', { type: 'button', 'aria-pressed': mode === 'quick', onClick: function () { setMode('quick'); } }, '30 秒速览'),
+          h('button', { type: 'button', 'aria-pressed': mode === 'full', onClick: function () { setMode('full'); } }, '完整版'))),
+
+      /* 01 hero */
+      h('section', { className: 'hero', id: 'about' },
+        h('div', null,
+          h('span', { className: 'status' }, '看机会 · 城市 / 远程 · 2026 Q4'),
+          h('h1', null, '你好，我是', h('br'), '你的名字。'),
+          h('div', { className: 'role' }, 'Go 后端工程师', h('span', null, '/'), '基础设施', h('span', null, '/'), '边缘网络'),
+          h('p', { className: 'pitch' }, '我做「让机器老实听话」的系统：资源编排、配置下发、边缘调度。习惯', h('mark', null, '先把原理讲清楚，再动手改线上'), '——这个站点里的每篇文章都是这么来的。'),
+          h('div', { className: 'tr-row' },
+            h(T.Button, { variant: 'primary' }, '下载简历 PDF ↓'),
+            h(T.Button, null, '发邮件')),
+          h('div', { className: 'links' }, h('a', { href: '#' }, 'GitHub'), h('a', { href: '#' }, '博客 RSS'), h('a', { href: '#' }, '微信 / 邮箱'))),
+        h(T.SpecSheet, { title: 'you.dev · 2026', rows: [
+          { k: '经验', v: '3 年', note: '后端 · 基础设施' },
+          { k: '主力语言', v: 'Go', tone: 'signal', note: '另：Python · Shell' },
+          { k: '领域', v: 'IaaS', note: 'CDN / 裸金属' },
+          { k: '最好成绩', v: '−63%', tone: 'green', note: '配置生效延迟（项目 01）' }] })),
+
+      /* 02 skills */
+      h(Sec, { n: '02', title: '能力地图', hint: '按深度分级，每项都链接到证据。', id: 'skills' },
+        h('div', { className: 'skills' }, SKILLS.map(function (col) {
+          return h('div', { key: col.lvl },
+            h('div', { className: 'lvl' }, h('i', { 'aria-hidden': 'true' }, [0, 1, 2].map(function (j) { return h('b', { key: j, className: j < col.bars ? 'on' : '' }); })), col.lvl),
+            col.items.map(function (s) {
+              return h('div', { key: s.k, className: 'skill' }, h('strong', null, s.k),
+                s.proof ? h('a', { href: '#' }, s.proof) : h('span', { className: 'none' }, '学习中，暂无公开作品'));
+            }));
+        }))),
+
+      /* 03 projects */
+      h(Sec, { n: '03', title: '精选项目', hint: '问题 → 方案 → 结果。内部名称已抽象，数字为量级。', id: 'work' },
+        h('article', { className: 'proj' },
+          h('div', { className: 'proj-top' },
+            h('span', { className: 'tr-kicker' }, '01 · Edge Config'),
+            h('span', { className: 'meta' }, '主导 · 3 人小组 · 2025')),
+          h('h3', null, '边缘配置下发：从全量推送到增量流'),
+          h('div', { className: 'psr' },
+            h('div', null, h('b', null, 'PROBLEM'), '2,000 个边缘节点每次改配置都全量拉取，生效要分钟级，高峰期打满源站带宽。'),
+            h('div', null, h('b', null, 'APPROACH'), '配置变更写成带版本号的日志 ', h(T.Marker, { n: 2 }), '，节点按版本订阅增量 ', h(T.Marker, { n: 3 }), '，断线重连从断点续传。'),
+            h('div', null, h('b', null, 'RESULT'), '生效 P99 从分钟级降到 10 秒内，下发带宽降一个数量级。')),
+          h(T.SpecSheet, { rows: [
+            { k: '生效 P99', v: '< 10 s', tone: 'green', note: '原：分钟级' },
+            { k: '带宽', v: '÷ 10', tone: 'green', note: '增量 vs 全量' },
+            { k: '节点规模', v: '2k+', note: '多地域' }] }),
+          h('div', { className: 'more full-only' },
+            h(T.Diagram, Object.assign({ n: 1, caption: '变更以日志追加，边缘节点按版本号订阅增量。' }, flow)))),
+        h('div', { className: 'proj-row full-only' },
+          h('article', { className: 'proj' },
+            h('div', { className: 'proj-top' }, h('span', { className: 'tr-kicker' }, '02 · Bare Metal'), h('span', { className: 'meta' }, '核心开发 · 2024')),
+            h('h3', null, '裸金属装机流水线的幂等化改造'),
+            h('p', { style: { margin: 0, fontSize: 14, lineHeight: '23px', color: 'var(--ink-muted)' } }, '把 12 步装机流程改成可重入的状态机，失败从断点恢复，人工介入率明显下降。'),
+            h('div', { className: 'tr-row', style: { marginTop: 'var(--space-3)' } }, h(T.Tag, { tone: 'cobalt' }, 'state machine'), h(T.Tag, null, 'IPMI'), h(T.Tag, null, 'Go'))),
+          h('article', { className: 'proj' },
+            h('div', { className: 'proj-top' }, h('span', { className: 'tr-kicker' }, '03 · Side Project'), h('span', { className: 'meta' }, '独立 · 开源')),
+            h('h3', null, 'Raft 可视化模拟器'),
+            h('p', { style: { margin: 0, fontSize: 14, lineHeight: '23px', color: 'var(--ink-muted)' } }, '可单步执行的 Raft 选主与日志复制演示，用来给自己和别人讲清楚共识。'),
+            h('div', { className: 'tr-row', style: { marginTop: 'var(--space-3)' } }, h(T.Tag, { tone: 'signal' }, 'distributed'), h(T.Tag, null, 'TypeScript'))))),
+
+      /* 04 experience */
+      h(Sec, { n: '04', title: '经历', hint: '完整职责见 PDF 简历。', id: 'exp' },
+        h('ol', { className: 'tl' },
+          h('li', null, h('div', { className: 'd' }, h('b', null, '2023.07'), ' — 至今'),
+            h('div', null, h('h4', null, '某云服务商 ', h('span', null, '· 后端工程师 · 基础设施平台')),
+              h('p', null, '负责 IDC 资源抽象层与边缘配置系统；推动配置增量下发上线。'))),
+          h('li', null, h('div', { className: 'd' }, h('b', null, '2022.07'), ' — 2023.06'),
+            h('div', null, h('h4', null, '某公司 ', h('span', null, '· 实习 / 初级开发')),
+              h('p', null, '内部运维工具与监控告警接入。'))),
+          h('li', null, h('div', { className: 'd' }, h('b', null, '2018'), ' — 2022'),
+            h('div', null, h('h4', null, '某大学 ', h('span', null, '· 计算机科学与技术 · 本科')),
+              h('p', null, '课程项目：一个简易的 KV 存储与 Raft 实现。'))))),
+
+      /* 05 writing */
+      h(Sec, { n: '05', title: '技术写作', hint: '深度的证据，也是表达能力的证据。', id: 'writing', full: true },
+        h('div', { className: 'cards' },
+          h(T.ArticleCard, { no: 17, kicker: 'Data Structure', href: '#', title: 'Go map：一次查找经过了什么', tags: [{ label: 'Go 源码', tone: 'signal' }], meta: ['18 min'] }),
+          h(T.ArticleCard, { no: 21, kicker: 'Distributed', href: '#', title: 'Raft 选主：为什么随机超时就够了', tags: [{ label: 'distributed', tone: 'cobalt' }], meta: ['25 min'] }),
+          h(T.ArticleCard, { no: 24, kicker: 'Systems', href: '#', title: '一切都经过 apiserver', tags: [{ label: 'k8s', tone: 'cobalt' }], meta: ['22 min'] })),
+        h('div', { className: 'learning' },
+          h('b', null, '正在学'), h('span', null, '线性代数'),
+          h('div', { className: 'prog', 'aria-hidden': 'true' }, [0, 1, 2, 3, 4, 5, 6, 7].map(function (j) { return h('i', { key: j, className: j < 3 ? 'on' : j === 3 ? 'now' : '' }); })),
+          h('span', { className: 'c' }, '第 4 / 8 章'))),
+
+      /* 06 how I work */
+      h(Sec, { n: '06', title: '我怎么工作', id: 'ways', full: true },
+        h('div', { className: 'ways' },
+          h(T.Callout, { kind: 'insight', title: '先复现，再修' }, '没有稳定复现的 bug 不算修好；复现步骤写进 issue。'),
+          h(T.Callout, { kind: 'invariant', title: '改动前看基线' }, '上线前先记下延迟、错误率的基线，改完拿同一张图对比。'),
+          h(T.Callout, { kind: 'definition', title: '写下来才算懂' }, '复杂机制写成一页说明或一张图，给自己也给接手的人。'))),
+
+      /* 07 contact */
+      h(Sec, { n: '07', title: '联系', hint: '通常 24 小时内回复。', id: 'contact' },
+        h('div', { className: 'contact' },
+          h('div', null, h('b', null, 'EMAIL'), h('a', { href: '#' }, 'you@example.com')),
+          h('div', null, h('b', null, 'GITHUB'), h('a', { href: '#' }, 'github.com/you')),
+          h('div', null, h('b', null, 'RESUME'), h('a', { href: '#' }, '简历 PDF · 中 / EN'))),
+        h('p', { className: 'aside full-only' }, '工作之外：一两个小项目或爱好，一句话带过，展示动手能力。'))
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Profile));
+</script>
+</body>
+</html>

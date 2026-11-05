@@ -1,0 +1,16 @@
+<!-- @dsCard group="Visualize" height=310 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>Cells — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{className:'tr-stack'},
+  h(T.Cells,{label:'bucket[3].tophash',cells:[{v:'0x5c',state:'ref'},{v:'0xa1'},{v:'0x07',state:'active',tag:'i'},{v:'0xe3',state:'hit',tag:'top'},{v:'',state:'empty'},{v:'',state:'empty'},{v:'0x9f',state:'dead'},{v:'',state:'empty'}]}),
+  h(T.Cells,{label:'raft log · node S2',indexBase:1,cellWidth:56,caption:'格子里是 term；commitIndex = 4。',cells:[{v:1},{v:1},{v:2},{v:3,tag:'commit',state:'hit'},{v:3,state:'active',tag:'last'}]}))
+  );
+</script>
+</body>
+</html>

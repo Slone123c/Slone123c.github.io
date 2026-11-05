@@ -1,0 +1,18 @@
+<!-- @dsCard group="Explain" height=190 -->
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>SpecSheet — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h(T.SpecSheet,{title:'runtime.hmap · Go 1.23',rows:[
+  {k:'查找 · 平均',v:'O(1)',tone:'green',note:'tophash 先过滤'},
+  {k:'查找 · 最坏',v:'O(n)',tone:'amber',note:'溢出桶链过长'},
+  {k:'桶容量',v:'8',note:'bucketCnt'},
+  {k:'负载因子',v:'6.5',tone:'signal',note:'超过即扩容'}]})
+  );
+</script>
+</body>
+</html>

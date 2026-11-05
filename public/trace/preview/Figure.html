@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script><meta charset="utf-8"><title>Figure — preview</title></head>
+<body>
+<div id="root" class="tr-pad"></div>
+<script>
+  var T = window.Trace, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(
+h('div',{style:{maxWidth:680}}, h(T.Figure,{n:2,caption:'hmap 持有 2^B 个桶；装满 8 个槽后挂上溢出桶。'},
+  h(T.Cells,{label:'hmap.buckets',cells:[{v:'b0'},{v:'b1'},{v:'b2'},{v:'b3',state:'active',tag:'hash&m'},{v:'b4'},{v:'b5'},{v:'b6'},{v:'b7'}]}),
+  h('span',{style:{fontFamily:'var(--font-mono)',color:'var(--cobalt)',fontWeight:700}},'→ overflow'),
+  h(T.Cells,{label:'b3.overflow',showIndex:false,cells:[{v:'k8',state:'ref'},{v:'',state:'empty'}]})))
+  );
+</script>
+</body>
+</html>
