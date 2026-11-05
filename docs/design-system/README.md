@@ -17,11 +17,11 @@
 | 可打开的预览页 | `public/trace/` | `npm run sync:trace` 生成，不手改 |
 | 页面骨架 | `src/styles/global.css` | 只放 Trace 组件之外的版面 |
 
-站点正式页面是静态 Astro，直接使用 `tr-*` 类名。`public/trace/` 下的封面和页面范例运行原版 `window.Trace` bundle，并自带 React 18.3.1（站点其余部分用 React 19）。
+站点正式页面是静态 Astro，直接使用 `tr-*` 类名。`public/trace/` 下的页面范例运行原版 `window.Trace` bundle，并自带 React 18.3.1（站点其余部分用 React 19）。
 
 `ProfilePage` 是占位模板，内容不是真实经历，页面顶部有说明。换成真实内容前不要把它链接到「关于」。
 
-组件指南和组件预览只保留在 `docs/`，不发布到站点。
+品牌手册、令牌、组件指南和组件预览只保留在 `docs/`，不发布到站点；范例从文章页进入。
 
 ## 尚未迁移
 

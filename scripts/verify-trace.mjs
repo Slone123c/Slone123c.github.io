@@ -19,11 +19,9 @@ try {
       }
       assert.deepEqual(errors, [], `${name} @${width}`);
     }
-    await page.goto(new URL('design/', origin).href, { waitUntil: 'load' });
-    assert.equal(await page.locator('iframe[data-autosize]').count(), 0);
-    assert.equal((await page.request.get(new URL('trace/preview/Button.html', origin).href)).status(), 404);
-    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `overflow design @${width}`);
-    assert.deepEqual(errors, [], `design @${width}`);
+    assert.equal((await page.request.get(new URL('design/', origin).href)).status(), 404);
+    await page.goto(new URL('blog/', origin).href);
+    assert.equal(await page.locator('a[href$="trace/preview/ProfilePage.html"]').count(), 1);
   }
   console.log('trace pass');
 } finally { await browser.close(); }

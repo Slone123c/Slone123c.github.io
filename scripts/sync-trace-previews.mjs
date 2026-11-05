@@ -20,15 +20,15 @@ const responsive = `<style>
 </style>`;
 await rm(`${out}/preview`, { recursive: true, force: true });
 await mkdir(`${out}/preview`);
-// 组件介绍只留在 docs，站点只发布封面和页面范例。
-for (const name of ['Cover', ...Object.keys(banners)]) {
+// 组件介绍只留在 docs，站点只发布页面范例。
+for (const name of Object.keys(banners)) {
   const file = `${name}.html`;
   // 第一行是 @dsCard 注释，留在 doctype 之前会进入怪异模式。
   let html = (await readFile(`${src}/previews/${file}`, 'utf8')).replace(/^<!-- @dsCard[^\n]*\n/, '');
   const head = `<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="stylesheet" href="../assets/tokens.css"><link rel="stylesheet" href="../assets/bundle.css"><script src="../assets/react.js"></script><script src="../assets/react-dom.js"></script><script src="../assets/bundle.js"></script>`;
   html = html.replace('<head>', `<head>${head}`);
   if (banners[name]) {
-    html = html.replace('</head>', `${responsive}</head>`).replace('<body>', `<body><div class="site-note"><span>${banners[name]}</span><a href="../../design/">← Trace 设计系统</a></div>`);
+    html = html.replace('</head>', `${responsive}</head>`).replace('<body>', `<body><div class="site-note"><span>${banners[name]}</span><a href="../../blog/">← 回到文章</a></div>`);
   }
   await writeFile(`${out}/preview/${file}`, html);
 }
