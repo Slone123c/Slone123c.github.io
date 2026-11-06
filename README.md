@@ -8,6 +8,6 @@ Astro 静态站点，普通 Markdown、MDX + React、Mermaid 与 SVG。发布到
 
 `main` 分支推送自动触发 GitHub Pages 部署，Actions 在 Node 24 下先检查再构建。`site/base` 根据 `GITHUB_REPOSITORY` 推导，支持用户站点根路径和项目子路径。
 
-视觉风格为 Trace 设计系统。规范只保存在本地 `style` 分支，以 worktree 挂在 `docs/design-system/`（`git worktree add docs/design-system style`），`npm run sync:trace` 从这里读取。
+视觉风格为 Trace 设计系统。规范在单独的私有仓库 `trace-style`，本地以 `style` 分支的 worktree 挂在 `docs/design-system/`，`npm run sync:trace` 从这里读取。新克隆后恢复：`git remote add style-origin https://github.com/Slone123c/trace-style.git && git fetch style-origin && git worktree add -b style docs/design-system style-origin/main`。
 
 这是部署可行性验证工程，页面中的两篇文章为演示内容。旧站点保留在 Git 历史中。
