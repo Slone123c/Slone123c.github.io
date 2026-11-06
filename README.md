@@ -1,5 +1,5 @@
 # Slone 的技术博客
 
-我的个人博客，记录 Go、分布式系统和后端工程的学习与实践，部分文章带有可交互的图示。
+基于 Astro 的静态站点，文章使用 Markdown 和 MDX，交互图示用 React，图表用 Mermaid 和 SVG，通过 GitHub Actions 部署到 GitHub Pages。
 
 https://slone123c.github.io/
